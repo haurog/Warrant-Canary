@@ -18,3 +18,10 @@ A **user** can do several different interactions:
 A **trusted third party** can only withdraw funds if the warrant canary has expired (some predefined time has passed since last timestamp update)
 
 The **general audience** can check if the warrant canary has expired and therefore know, that a certain event has happened.
+
+
+Things to be determined: 
+* How to handle multi-sig warrant canarys. -> not in initial version of the contract 
+  * Could have a m of n feature where at least m signatures are necessary to initiate the above **user** interactions. 
+  * Would also need to have a possibilty to add and remove signatures. 
+  * Also would need to be able to change the m and n  (test that m can never be larger than n)
