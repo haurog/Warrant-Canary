@@ -8,9 +8,8 @@ pragma solidity ^0.8.0;
 
 contract WarrantCanaray {
 
-    uint IDcount;
     address adminOwner;
-
+    uint IDcount;
     struct warrantCanary {
         uint ID;
         uint expirationBlock;
@@ -22,9 +21,7 @@ contract WarrantCanaray {
     }
 
     mapping(uint => warrantCanary)  warrantCanaries;  // All warrant canaries by ID
-
     mapping(address => uint[]) IDsOwned;  // to store all warrant canaries that an address has
-
     mapping(address => uint[]) IDsTrusted;  // to store all warrant canaries that have this trusted third party.
 
 
@@ -39,15 +36,27 @@ contract WarrantCanaray {
         _;
     }
 
-    function createWarrantCanary(uint expirationBlock, string memory purpose, address trustedThirdParty) public payable {
+    function createWarrantCanary(
+        uint expirationBlock,
+        string memory purpose,
+        address trustedThirdParty
+    )
+        public
+        payable
+    {
         // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
     }
 
-    function createWarrantCanarySimple(uint expirationBlock, string memory purpose) public {
+    function createWarrantCanarySimple(uint expirationBlock, string memory purpose)
+        public
+    {
         // Calls the normal createWarrantCanary function with trustedThirdParty = 0x0
     }
 
-    function updateExpiration(uint warrantCanaryID, uint newExpirationBlock) public onlyCanaryOwner(warrantCanaryID) {
+    function updateExpiration(uint warrantCanaryID, uint newExpirationBlock)
+        public
+        onlyCanaryOwner(warrantCanaryID)
+    {
         // Update the block number at which a warrant canary expires
     }
 
@@ -55,19 +64,33 @@ contract WarrantCanaray {
         // add more fund to a warrant canary
     }
 
-    function changeTrustedThirdParty(uint warrantCanaryID, address newTrustedThirdParty) public onlyCanaryOwner(warrantCanaryID) {
+    function changeTrustedThirdParty(
+        uint warrantCanaryID,
+        address newTrustedThirdParty
+    )
+        public
+        onlyCanaryOwner(warrantCanaryID)
+    {
         // change the address of a trusted third party
     }
 
-    function withdrawSomeFunds(uint warrantCanaryID, uint fundsToWithdraw) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
+    function withdrawSomeFunds(uint warrantCanaryID, uint fundsToWithdraw)
+        public
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID)
+    {
         // withdraws the specified amount of funds
     }
 
-    function withdrawAllFunds(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
+    function withdrawAllFunds(uint warrantCanaryID)
+        public
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID)
+    {
         // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsTOWithDraw = warrantCanary.enclosedFunds
     }
 
-    function deleteWarrantCanary(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
+    function deleteWarrantCanary(uint warrantCanaryID)
+        public
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
     }
 
