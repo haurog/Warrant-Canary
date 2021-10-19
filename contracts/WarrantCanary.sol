@@ -28,11 +28,14 @@ contract WarrantCanaray {
     mapping(address => uint[]) IDsTrusted;  // to store all warrant canaries that have this trusted third party.
 
 
-    modifier onlyCanaryOwner() {
+    modifier onlyCanaryOwner(uint warrantCanaryID) {
+        require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner);
         _;
     }
 
-    modifier onlyCanaryOwnerOrTrustedThirdParty() {
+    modifier onlyCanaryOwnerOrTrustedThirdParty(uint warrantCanaryID) {
+        require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner ||
+                msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty);
         _;
     }
 
@@ -44,7 +47,7 @@ contract WarrantCanaray {
         // Calls the normal createWarrantCanary function with trustedThirdParty = 0x0
     }
 
-    function updateExpiration(uint newExpirationBlock, uint warrantCanaryID) public onlyCanaryOwner {
+    function updateExpiration(uint warrantCanaryID, uint newExpirationBlock) public onlyCanaryOwner(warrantCanaryID) {
         // Update the block number at which a warrant canary expires
     }
 
@@ -52,19 +55,19 @@ contract WarrantCanaray {
         // add more fund to a warrant canary
     }
 
-    function changeTrustedThirdParty(address newTrustedThirdParty) public onlyCanaryOwner {
+    function changeTrustedThirdParty(uint warrantCanaryID, address newTrustedThirdParty) public onlyCanaryOwner(warrantCanaryID) {
         // change the address of a trusted third party
     }
 
-    function withdrawSomeFunds(uint warrantCanaryID, uint fundsToWithdraw) public onlyCanaryOwnerOrTrustedThirdParty {
+    function withdrawSomeFunds(uint warrantCanaryID, uint fundsToWithdraw) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
         // withdraws the specified amount of funds
     }
 
-    function withdrawAllFunds(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty {
+    function withdrawAllFunds(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
         // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsTOWithDraw = warrantCanary.enclosedFunds
     }
 
-    function deleteWarrantCanary(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty {
+    function deleteWarrantCanary(uint warrantCanaryID) public onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
     }
 
