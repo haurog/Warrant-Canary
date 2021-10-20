@@ -21,7 +21,7 @@ contract WarrantCanaray {
     }
 
     mapping(uint => warrantCanary)  warrantCanaries;  // All warrant canaries by ID
-    mapping(address => uint[]) IDsOwned;  // to store all warrant canaries that an address has
+    mapping(address => uint[]) IDsOwned;  // to store all warrant canaries that an address owns
     mapping(address => uint[]) IDsTrusted;  // to store all warrant canaries that have this trusted third party.
 
 
