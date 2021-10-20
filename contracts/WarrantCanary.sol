@@ -50,6 +50,7 @@ contract WarrantCanaray {
         public
     {
         // Calls the normal createWarrantCanary function with trustedThirdParty = 0x0
+        createWarrantCanary(expirationBlock, purpose, address(0));
     }
 
     function updateExpiration(uint warrantCanaryID, uint newExpirationBlock)
