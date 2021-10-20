@@ -35,6 +35,11 @@ contract WarrantCanary {
         _;
     }
 
+    modifier updateLastUpdatedInBlock(uint warrantCanaryID) {
+        _;
+        warrantCanaries[warrantCanaryID].lastUpdatedInBlock = block.number;
+    }
+
     function createWarrantCanary(
         uint expirationBlock_,
         string memory purpose_,
@@ -74,22 +79,24 @@ contract WarrantCanary {
     function updateExpiration(uint warrantCanaryID_, uint newExpirationBlock_)
         public
         onlyCanaryOwner(warrantCanaryID_)
+        updateLastUpdatedInBlock(warrantCanaryID_)
     {
-        // Update the block number at which a warrant canary expires
+        warrantCanaries[warrantCanaryID_].expirationBlock = newExpirationBlock_;
     }
 
     function addFunds(uint warrantCanaryID_) public payable{
-        // add more fund to a warrant canary
+        warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
     }
 
     function changeTrustedThirdParty(
         uint warrantCanaryID_,
-        address newTrustedThirdParty_
+        address payable newTrustedThirdParty_
     )
         public
         onlyCanaryOwner(warrantCanaryID_)
+        updateLastUpdatedInBlock(warrantCanaryID_)
     {
-        // change the address of a trusted third party
+        warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
     }
 
     function withdrawSomeFunds(uint warrantCanaryID_, uint fundsToWithdraw_)
