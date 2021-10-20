@@ -71,48 +71,48 @@ contract WarrantCanary {
         createWarrantCanary(expirationBlock_, purpose_, payable(address(0)));
     }
 
-    function updateExpiration(uint warrantCanaryID, uint newExpirationBlock)
+    function updateExpiration(uint warrantCanaryID_, uint newExpirationBlock_)
         public
-        onlyCanaryOwner(warrantCanaryID)
+        onlyCanaryOwner(warrantCanaryID_)
     {
         // Update the block number at which a warrant canary expires
     }
 
-    function addFunds(uint warrantCanaryID) public payable{
+    function addFunds(uint warrantCanaryID_) public payable{
         // add more fund to a warrant canary
     }
 
     function changeTrustedThirdParty(
-        uint warrantCanaryID,
-        address newTrustedThirdParty
+        uint warrantCanaryID_,
+        address newTrustedThirdParty_
     )
         public
-        onlyCanaryOwner(warrantCanaryID)
+        onlyCanaryOwner(warrantCanaryID_)
     {
         // change the address of a trusted third party
     }
 
-    function withdrawSomeFunds(uint warrantCanaryID, uint fundsToWithdraw)
+    function withdrawSomeFunds(uint warrantCanaryID_, uint fundsToWithdraw_)
         public
-        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID)
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_)
     {
         // withdraws the specified amount of funds
     }
 
-    function withdrawAllFunds(uint warrantCanaryID)
+    function withdrawAllFunds(uint warrantCanaryID_)
         public
-        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID)
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_)
     {
         // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsTOWithDraw = warrantCanary.enclosedFunds
     }
 
-    function deleteWarrantCanary(uint warrantCanaryID)
+    function deleteWarrantCanary(uint warrantCanaryID_)
         public
-        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID) {
+        onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_) {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
     }
 
-    function Expiration(uint warrantCanaryID) public {
+    function Expiration(uint warrantCanaryID_) public {
         // returns the expiration Block set in the warrantCanary
     }
 
