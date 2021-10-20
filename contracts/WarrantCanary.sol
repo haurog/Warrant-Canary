@@ -2,8 +2,7 @@
 pragma solidity ^0.8.0;
 
 /*
-*  This is the initial design of the Warrant Canary contract. This will be only
-*  the scaffolding for the general structure
+*
 */
 
 contract WarrantCanaray {
