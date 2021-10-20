@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 *
 */
 
-contract WarrantCanaray {
+contract WarrantCanary {
 
     address adminOwner;
     uint IDcount;
@@ -36,21 +36,39 @@ contract WarrantCanaray {
     }
 
     function createWarrantCanary(
-        uint expirationBlock,
-        string memory purpose,
-        address trustedThirdParty
+        uint expirationBlock_,
+        string memory purpose_,
+        address payable trustedThirdParty_
     )
         public
         payable
     {
         // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
+        warrantCanaries[IDcount] = warrantCanary(
+        {
+            ID : IDcount,
+            expirationBlock: expirationBlock_,
+            lastUpdatedInBlock: block.number,
+            purpose: purpose_,
+            warrantCanaryOwner: payable(msg.sender),
+            trustedThirdParty: trustedThirdParty_,
+            enclosedFunds: msg.value
+        });
+
+        IDsOwned[msg.sender].push(IDcount);
+
+        if (trustedThirdParty_!= address(0)) {
+            IDsTrusted[trustedThirdParty_].push(IDcount);
+        }
+
+        IDcount++;
+
     }
 
-    function createWarrantCanarySimple(uint expirationBlock, string memory purpose)
+    function createWarrantCanarySimple(uint expirationBlock_, string memory purpose_)
         public
     {
-        // Calls the normal createWarrantCanary function with trustedThirdParty = 0x0
-        createWarrantCanary(expirationBlock, purpose, address(0));
+        createWarrantCanary(expirationBlock_, purpose_, payable(address(0)));
     }
 
     function updateExpiration(uint warrantCanaryID, uint newExpirationBlock)
