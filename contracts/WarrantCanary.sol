@@ -23,6 +23,10 @@ contract WarrantCanary {
     mapping(address => uint[]) IDsOwned;  // to store all warrant canaries that an address owns
     mapping(address => uint[]) IDsTrusted;  // to store all warrant canaries that have this trusted third party.
 
+    event Created(uint warrantCanaryID, string purpose,address trustedThirdParty);
+    event ExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
+    event FundsAdded(uint warrantCanaryID, uint amount);
+    event ChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner);
@@ -66,6 +70,8 @@ contract WarrantCanary {
             IDsTrusted[trustedThirdParty_].push(IDcount);
         }
 
+        emit Created(IDcount, purpose_, trustedThirdParty_);
+
         IDcount++;
 
     }
@@ -81,11 +87,14 @@ contract WarrantCanary {
         onlyCanaryOwner(warrantCanaryID_)
         updateLastUpdatedInBlock(warrantCanaryID_)
     {
+        uint oldExpirationBlock = warrantCanaries[warrantCanaryID_].expirationBlock;
         warrantCanaries[warrantCanaryID_].expirationBlock = newExpirationBlock_;
+        emit ExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
     }
 
     function addFunds(uint warrantCanaryID_) public payable{
         warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
+        emit FundsAdded(warrantCanaryID_, msg.value);
     }
 
     function changeTrustedThirdParty(
@@ -96,7 +105,9 @@ contract WarrantCanary {
         onlyCanaryOwner(warrantCanaryID_)
         updateLastUpdatedInBlock(warrantCanaryID_)
     {
+        address oldTrustedThirdParty = warrantCanaries[warrantCanaryID_].trustedThirdParty;
         warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
+        emit ChangedTrustedThirdParty(warrantCanaryID_, oldTrustedThirdParty, newTrustedThirdParty_);
     }
 
     function withdrawSomeFunds(uint warrantCanaryID_, uint fundsToWithdraw_)
