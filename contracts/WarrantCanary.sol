@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
 contract WarrantCanary {
 
     address adminOwner;
-    uint IDcount;
+    uint public IDcount;
     struct warrantCanary {
         uint ID;
         uint expirationBlock;
@@ -19,14 +19,14 @@ contract WarrantCanary {
         uint enclosedFunds;
     }
 
-    mapping(uint => warrantCanary)  warrantCanaries;  // All warrant canaries by ID
-    mapping(address => uint[]) IDsOwned;  // to store all warrant canaries that an address owns
-    mapping(address => uint[]) IDsTrusted;  // to store all warrant canaries that have this trusted third party.
+    mapping(uint => warrantCanary) public  warrantCanaries;  // All warrant canaries by ID
+    mapping(address => uint[]) public IDsOwned;  // to store all warrant canaries that an address owns
+    mapping(address => uint[]) public IDsTrusted;  // to store all warrant canaries that have this trusted third party.
 
-    event Created(uint warrantCanaryID, string purpose,address trustedThirdParty);
-    event ExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
-    event FundsAdded(uint warrantCanaryID, uint amount);
-    event ChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
+    event LogCreated(uint warrantCanaryID, string purpose,address trustedThirdParty);
+    event LogExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
+    event LogFundsAdded(uint warrantCanaryID, uint amount);
+    event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner);
@@ -70,7 +70,7 @@ contract WarrantCanary {
             IDsTrusted[trustedThirdParty_].push(IDcount);
         }
 
-        emit Created(IDcount, purpose_, trustedThirdParty_);
+        emit LogCreated(IDcount, purpose_, trustedThirdParty_);
 
         IDcount++;
 
@@ -89,12 +89,12 @@ contract WarrantCanary {
     {
         uint oldExpirationBlock = warrantCanaries[warrantCanaryID_].expirationBlock;
         warrantCanaries[warrantCanaryID_].expirationBlock = newExpirationBlock_;
-        emit ExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
+        emit LogExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
     }
 
     function addFunds(uint warrantCanaryID_) public payable{
         warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
-        emit FundsAdded(warrantCanaryID_, msg.value);
+        emit LogFundsAdded(warrantCanaryID_, msg.value);
     }
 
     function changeTrustedThirdParty(
@@ -107,7 +107,7 @@ contract WarrantCanary {
     {
         address oldTrustedThirdParty = warrantCanaries[warrantCanaryID_].trustedThirdParty;
         warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
-        emit ChangedTrustedThirdParty(warrantCanaryID_, oldTrustedThirdParty, newTrustedThirdParty_);
+        emit LogChangedTrustedThirdParty(warrantCanaryID_, oldTrustedThirdParty, newTrustedThirdParty_);
     }
 
     function withdrawSomeFunds(uint warrantCanaryID_, uint fundsToWithdraw_)
