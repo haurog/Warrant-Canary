@@ -27,6 +27,8 @@ contract WarrantCanary {
     event LogExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
     event LogFundsAdded(uint warrantCanaryID, uint amount);
     event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
+    event LogFundsWithdrawn(uint warrantCanaryID, uint amount);
+
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner);
@@ -114,14 +116,17 @@ contract WarrantCanary {
         public
         onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_)
     {
-        // withdraws the specified amount of funds
+        require(warrantCanaries[warrantCanaryID_].enclosedFunds >= fundsToWithdraw_);
+        warrantCanaries[warrantCanaryID_].enclosedFunds -= fundsToWithdraw_;
+        warrantCanaries[warrantCanaryID_].warrantCanaryOwner.transfer(fundsToWithdraw_);
+        emit LogFundsWithdrawn(warrantCanaryID_, fundsToWithdraw_);
     }
 
     function withdrawAllFunds(uint warrantCanaryID_)
         public
         onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_)
     {
-        // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsTOWithDraw = warrantCanary.enclosedFunds
+        // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsToWithDraw = warrantCanary.enclosedFunds
     }
 
     function deleteWarrantCanary(uint warrantCanaryID_)
