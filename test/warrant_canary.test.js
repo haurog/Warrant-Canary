@@ -6,13 +6,6 @@ const WarrantCanary = artifacts.require("WarrantCanary");
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
 contract("WarrantCanary", function (accounts) {
-  it("should assert true", async function () {
-    await WarrantCanary.deployed();
-    return assert.isTrue(true);
-  });
-  // it("should return the list of accounts", async ()=> {
-  //   console.log(accounts);
-  // });
 
   let instance;
 
@@ -56,5 +49,31 @@ contract("WarrantCanary", function (accounts) {
         "The owner of the warrant Canary is not set properly",
       );
     });
+    it("should emit a Log when funds are withdrawn", async () => {
+      let eventEmitted = false;
+      const purpose = "test the contract."
+      const expirationBlock = 111;
+      await instance.createWarrantCanarySimple(expirationBlock, purpose);
+
+      const addFundsTx = await instance.addFunds(0, {value: 250});
+
+      const withdrawTx = await instance.withdrawSomeFunds(0, 200);
+
+      // console.log("test: " + withdrawTx.logs[0].event);
+
+      if (withdrawTx.logs[0].event == "LogFundsWithdrawn") {
+        eventEmitted = true;
+      }
+
+      assert.equal(
+        eventEmitted,
+        true,
+        "Withdrawing funds should emit an event",
+      );
+
+      // const result = await instance.warrantCanaries.call(0);
+      // console.log(result.purpose);
+    });
   });
+
 });
