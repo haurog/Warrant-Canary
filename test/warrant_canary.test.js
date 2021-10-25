@@ -8,19 +8,22 @@ const WarrantCanary = artifacts.require("WarrantCanary");
 contract("WarrantCanary", function (accounts) {
 
   let instance;
+  let createTx;
+  const purpose = "test the contract."
+  const expirationBlock = 111;
 
   beforeEach(async () => {
     instance = await WarrantCanary.new();
+    createTx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
+
   });
 
   describe("Create warrant canary contract.", () => {
-    it("should emit a Log and store all elements correctly when created simple", async () => {
+    it("should emit a Log and store all elements correctly when a simple contract is created.", async () => {
       let eventEmitted = false;
-      const purpose = "test the contract."
-      const expirationBlock = 111;
-      const tx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
 
-      if (tx.logs[0].event == "LogCreated") {
+      console.log("first log: " + createTx.logs[0]);
+      if (createTx.logs[0].event == "LogCreated") {
         eventEmitted = true;
       }
 
@@ -31,7 +34,7 @@ contract("WarrantCanary", function (accounts) {
       );
 
       const result = await instance.warrantCanaries.call(0);
-      // console.log(result.purpose);
+      console.log("Purpose: " + result.purpose);
 
       assert.equal(
         result.purpose,
