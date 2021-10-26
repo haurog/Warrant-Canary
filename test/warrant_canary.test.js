@@ -59,12 +59,6 @@ contract("WarrantCanary", function (accounts) {
         "Withdrawing funds should emit an event",
       );
 
-      assert(
-        withdrawTx.logs[0].event == "LogFundsWithdrawn",
-        "Withdrawing funds should emit an event",
-      );
-
-
       let result = await instance.warrantCanaries.call(0);
 
       // console.log("added: " + fundsAdded + " withdrawn: " + fundsWithdrawn + " enclosed: " + result.enclosedFunds);
@@ -81,9 +75,6 @@ contract("WarrantCanary", function (accounts) {
         result.enclosedFunds, 0,
         "Withdrawing everything does not remove all funds"
       );
-
-
-
 
       // const withdrawTxFail = await instance.withdrawSomeFunds(0, fundsWithdrawn, {account: account[1]});
 
