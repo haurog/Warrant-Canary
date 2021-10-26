@@ -127,6 +127,7 @@ contract WarrantCanary {
         onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_)
     {
         // Withdraws all funds from a warrant canary. Calls "withdrawSomeFunds" with fundsToWithDraw = warrantCanary.enclosedFunds
+        withdrawSomeFunds(warrantCanaryID_, warrantCanaries[warrantCanaryID_].enclosedFunds);
     }
 
     function deleteWarrantCanary(uint warrantCanaryID_)

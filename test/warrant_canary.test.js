@@ -65,7 +65,7 @@ contract("WarrantCanary", function (accounts) {
       );
 
 
-      const result = await instance.warrantCanaries.call(0);
+      let result = await instance.warrantCanaries.call(0);
 
       // console.log("added: " + fundsAdded + " withdrawn: " + fundsWithdrawn + " enclosed: " + result.enclosedFunds);
       assert.equal(
@@ -73,6 +73,17 @@ contract("WarrantCanary", function (accounts) {
         fundsAdded-fundsWithdrawn,
         "Enclosed Funds does not equal added minus withdrawn funds"
       )
+
+      const withdrawAllTx = await instance.withdrawAllFunds(0);
+      result = await instance.warrantCanaries.call(0);
+
+      assert.equal(
+        result.enclosedFunds, 0,
+        "Withdrawing everything does not remove all funds"
+      );
+
+
+
 
       // const withdrawTxFail = await instance.withdrawSomeFunds(0, fundsWithdrawn, {account: account[1]});
 
