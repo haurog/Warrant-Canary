@@ -42,8 +42,10 @@ contract("WarrantCanary", function (accounts) {
     });
 
     it("should emit a Log when funds are added and withdrawn", async () => {
-      const addFundsTx = await instance.addFunds(0, {value: 250});
-      const withdrawTx = await instance.withdrawSomeFunds(0, 200);
+      const fundsAdded = 250; // wei
+      const fundsWithdrawn = 200; //wei
+      const addFundsTx = await instance.addFunds(0, {value: fundsAdded});
+      const withdrawTx = await instance.withdrawSomeFunds(0, fundsWithdrawn);
 
       // console.log("test: " + withdrawTx.logs[0].event);
 
@@ -61,6 +63,19 @@ contract("WarrantCanary", function (accounts) {
         withdrawTx.logs[0].event == "LogFundsWithdrawn",
         "Withdrawing funds should emit an event",
       );
+
+
+      const result = await instance.warrantCanaries.call(0);
+
+      // console.log("added: " + fundsAdded + " withdrawn: " + fundsWithdrawn + " enclosed: " + result.enclosedFunds);
+      assert.equal(
+        result.enclosedFunds,
+        fundsAdded-fundsWithdrawn,
+        "Enclosed Funds does not equal added minus withdrawn funds"
+      )
+
+      // const withdrawTxFail = await instance.withdrawSomeFunds(0, fundsWithdrawn, {account: account[1]});
+
     });
   });
 
