@@ -118,7 +118,7 @@ contract WarrantCanary {
     {
         require(warrantCanaries[warrantCanaryID_].enclosedFunds >= fundsToWithdraw_);
         warrantCanaries[warrantCanaryID_].enclosedFunds -= fundsToWithdraw_;
-        warrantCanaries[warrantCanaryID_].warrantCanaryOwner.transfer(fundsToWithdraw_);
+        payable(msg.sender).transfer(fundsToWithdraw_);
         emit LogFundsWithdrawn(warrantCanaryID_, fundsToWithdraw_);
     }
 
