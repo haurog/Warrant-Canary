@@ -38,6 +38,9 @@ contract WarrantCanary {
     modifier onlyCanaryOwnerOrTrustedThirdParty(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner ||
                 msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty);
+        if (msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty) {
+            require(block.number >= warrantCanaries[warrantCanaryID].expirationBlock);
+        }
         _;
     }
 
