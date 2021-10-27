@@ -1,4 +1,5 @@
 const WarrantCanary = artifacts.require("WarrantCanary");
+const truffleAssert = require('truffle-assertions');
 
 /*
  * uncomment accounts to access the test accounts made available by the
@@ -42,13 +43,11 @@ contract("WarrantCanary", function (accounts) {
 
     it("should emit a Log when funds are added and withdrawn", async () => {
 
-      const fundsAdded = 250; // wei
-      const fundsWithdrawn = 200; //wei
-      const test = web3.toWei(1, "ether")
+      const fundsAdded = web3.utils.toWei('1', 'ether');
+      const fundsWithdrawn = web3.utils.toWei('0.9', 'ether');
+      const test = web3.utils.toWei('1', 'ether')
       const addFundsTx = await instance.addFunds(0, {value: fundsAdded});
       const withdrawTx = await instance.withdrawSomeFunds(0, fundsWithdrawn);
-
-      // console.log("test: " + withdrawTx.logs[0].event);
 
       assert.equal(addFundsTx.logs[0].event, "LogFundsAdded",
         "adding funds should emit an event",
@@ -65,15 +64,32 @@ contract("WarrantCanary", function (accounts) {
         "Enclosed Funds does not equal added minus withdrawn funds"
       )
 
-      const withdrawAllTx = await instance.withdrawAllFunds(0);
+      await truffleAssert.reverts(
+        instance.withdrawSomeFunds(0, 10, {from: accounts[1]}),
+        truffleAssert.ErrorType.REVERT,
+        "only owner or trusted third party are allowed to withdraw funds"
+      );
+
+      truffleAssert.eventEmitted(
+        await instance.changeTrustedThirdParty(0, accounts[1]),
+        "LogChangedTrustedThirdParty"
+      );
+
+      await truffleAssert.passes(
+        await instance.withdrawAllFunds(0, {from: accounts[1]}),
+        "account 1 is now the trusted third party, so the transaction should pass."
+      );
+
+      truffleAssert.eventEmitted(
+        await instance.withdrawAllFunds(0),
+        "LogFundsWithdrawn"
+      );
+
       result = await instance.warrantCanaries.call(0);
 
       assert.equal(result.enclosedFunds, 0,
         "Withdrawing everything does not remove all funds"
       );
-
-      // const withdrawTxFail = await instance.withdrawSomeFunds(0, fundsWithdrawn, {account: account[1]});
-
     });
   });
 
