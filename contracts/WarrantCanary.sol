@@ -139,7 +139,7 @@ contract WarrantCanary {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
     }
 
-    function Expiration(uint warrantCanaryID_) public {
+    function Expiration(uint warrantCanaryID_) public view {
         // returns the expiration Block set in the warrantCanary
     }
 
