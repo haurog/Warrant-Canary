@@ -31,15 +31,18 @@ contract WarrantCanary {
 
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
-        require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner);
+        require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner,
+                "You are not the owner of this warrant canary.");
         _;
     }
 
     modifier onlyCanaryOwnerOrTrustedThirdParty(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner ||
-                msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty);
+                msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty,
+                "You are neither the owner or trusted third party of this warrant canary");
         if (msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty) {
-            require(block.number >= warrantCanaries[warrantCanaryID].expirationBlock);
+            require(block.number >= warrantCanaries[warrantCanaryID].expirationBlock,
+                "Warrant canary has not expired yet");
         }
         _;
     }
