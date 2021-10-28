@@ -6,14 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Simple Dapp</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  
+
 
 </head>
 <body>
-  <h1>This is a Dapp</h1>
-  <p>
-    Hello, World!
-  </p>
+  <h1>Warrant Canary</h1>
+
   <div id="mm-detected"></div>
 
   <!-- Connect to MetaMask Wallet -->
@@ -26,13 +24,42 @@
 
   <!-- Provide an input to change the contract text value -->
   <div>
-  <input id="ss-input-box" type="number" placeholder="Provide input"/>  
-</div>
-  <button id="ss-input-button">Submit Value</button>
+  <button id="create-button">Create Warrant Canary</button>
+  <input id="create-button-expiration-input" type="number" placeholder="Expiration Block"/>
+  <input id="create-button-purpose-input" type="string" placeholder="Purpose"/>
+  <input id="create-button-trustedThirdParty-input" type="string" placeholder="Address of the New Third Party"/>
+  <input id="create-button-funds-input" type="number" placeholder="Funds in ETH"/>
+  </div>
+  <div>
+    <button id="updateExpiration-button">Update Expiration</button>
+    <input id="updateExpiration-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+    <input id="updateExpiration-button-expiration-input" type="number" placeholder="Expiration Block"/>
+  </div>
+  <div>
+    <button id="addFunds-button">Add Funds</button>
+    <input id="addFunds-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+    <input id="addFunds-button-funds-input" type="number" placeholder="Funds in ETH"/>
+  </div>
+  <div>
+    <button id="changeThirdParty-button">Change Trusted Third Party</button>
+    <input id="changeThirdParty-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+    <input id="changeThirdParty-button-thirdParty-input" type="string" placeholder="Address of the New Third Party"/>
+  </div>
+  <div>
+    <button id="withdrawSome-button">Withdraw Some Funds</button>
+    <input id="withdrawSome-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+    <input id="withdrawSome-button-funds-input" type="number" placeholder="Funds to Withdraw in ETH"/>
+  </div>
+  <div>
+    <button id="withdrawAll-button">Withdraw Some Funds</button>
+    <input id="withdrawAll-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+  </div>
+
 
   <!-- Read input from contract -->
   <div>
-    <button id="ss-get-value">Get Simple Storage value</button>
+    <button id="getExpiration-button">Get Expiration Block</button>
+    <input id="getExpiration-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
   </div>
   <div id="ss-display-value">Current Simple Storage Value: </div>
 
