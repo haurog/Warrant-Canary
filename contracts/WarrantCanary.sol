@@ -143,8 +143,42 @@ contract WarrantCanary {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
         require(warrantCanaries[warrantCanaryID_].enclosedFunds == 0,
         "The warrant Canary is not empty and can not be deleted.");
+
+        address wcOwner = warrantCanaries[warrantCanaryID_].warrantCanaryOwner;
+        address wcTrusted = warrantCanaries[warrantCanaryID_].trustedThirdParty;
+
+        // uint[] memory tempArray = IDsOwned[wcOwner];
+        // IDsOwned[wcOwner] = deleteByValue(tempArray, warrantCanaryID_);
+        // IDsOwned[wcOwner].pop(); // remove last element
+
+        // if (wcTrusted != address(0)) {
+        //     tempArray = IDsTrusted[wcTrusted];
+        //     IDsTrusted[wcTrusted] = deleteByValue(tempArray, warrantCanaryID_);
+        //     IDsTrusted[wcTrusted].pop();
+        // }
+
+        //Need to remove traces from other 2 maps as well
+
         delete warrantCanaries[warrantCanaryID_];
+
         emit LogDeleted(warrantCanaryID_);
+    }
+
+    function deleteByValue(uint[] memory array_, uint value_)
+        private
+        pure
+        returns(uint[] memory)
+    {
+        uint index = 0;
+        // find element
+        // TODO: the following for loop is very hacky
+        for(; index <= array_.length && array_[index] != value_ ; index++){}
+
+        // remove element
+        for (; index <= array_.length - 1; index++){
+            array_[index] = array_[index + 1];
+        }
+        return array_;
     }
 
     function Expiration(uint warrantCanaryID_) public view {
