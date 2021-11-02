@@ -19,7 +19,6 @@ contract("WarrantCanary", function (accounts) {
   beforeEach(async () => {
     instance = await WarrantCanary.new();
     createTx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
-
   });
 
   it("Creating Warrant Canary and store necessary information", async () => {
@@ -65,7 +64,7 @@ contract("WarrantCanary", function (accounts) {
     await truffleAssert.reverts(
       instance.withdrawSomeFunds(0, 10, { from: accounts[1] }),
       truffleAssert.ErrorType.REVERT,
-      "only owner or trusted third party are allowed to withdraw funds"
+      "Only owner or trusted third party are allowed to withdraw funds"
     );
 
     truffleAssert.eventEmitted(
@@ -139,6 +138,31 @@ contract("WarrantCanary", function (accounts) {
     assert.equal(result.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
+  });
+
+  it("Tests that a warrant canary can be deleted", async () => {
+    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
+
+
+    await truffleAssert.reverts(
+      instance.deleteWarrantCanary(0),
+      truffleAssert.ErrorType.REVERT,
+      "There are still funds enclosed. Warrant Canary cannot be deleted."
+    );
+
+    await instance.withdrawAllFunds(0);
+
+    truffleAssert.eventEmitted(
+      await instance.deleteWarrantCanary(0),
+      "LogDeleted"
+    );
+
+    result = await instance.warrantCanaries.call(0);
+
+    assert.equal(result.warrantCanaryOwner, 0,
+      "Warrant Canary has not been deleted."
+    );
+
   });
 
 });
