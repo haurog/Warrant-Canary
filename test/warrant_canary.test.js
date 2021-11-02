@@ -11,10 +11,10 @@ contract("WarrantCanary", function (accounts) {
   let instance;
   let createTx;
   const purpose = "test the contract."
-  const expirationBlock = 111;
+  const expirationBlock = 0;
 
-  const fundsAdded = web3.utils.toWei('1', 'ether');
-  const fundsWithdrawn = web3.utils.toWei('0.9', 'ether');
+  const fundsAdded = web3.utils.toWei('0.1', 'ether');
+  const fundsWithdrawn = web3.utils.toWei('0.09', 'ether');
 
   beforeEach(async () => {
     instance = await WarrantCanary.new();
@@ -61,12 +61,6 @@ contract("WarrantCanary", function (accounts) {
       "Enclosed Funds does not equal added minus withdrawn funds"
     )
 
-    await truffleAssert.reverts(
-      instance.withdrawSomeFunds(0, 10, { from: accounts[1] }),
-      truffleAssert.ErrorType.REVERT,
-      "Only owner or trusted third party are allowed to withdraw funds"
-    );
-
     truffleAssert.eventEmitted(
       await instance.withdrawAllFunds(0),
       "LogFundsWithdrawn"
@@ -86,7 +80,7 @@ contract("WarrantCanary", function (accounts) {
     await truffleAssert.reverts(
       instance.withdrawSomeFunds(0, 10, { from: accounts[1] }),
       truffleAssert.ErrorType.REVERT,
-      "only owner or trusted third party are allowed to withdraw funds"
+      "Only owner or trusted third party are allowed to withdraw funds"
     );
 
     truffleAssert.eventEmitted(
@@ -95,7 +89,7 @@ contract("WarrantCanary", function (accounts) {
     );
 
     await truffleAssert.passes(
-      await instance.withdrawAllFunds(0, { from: accounts[1] }),
+      instance.withdrawAllFunds(0, { from: accounts[1] }),
       "account 1 is now the trusted third party, so the transaction should pass."
     );
 
