@@ -28,6 +28,7 @@ contract WarrantCanary {
     event LogFundsAdded(uint warrantCanaryID, uint amount);
     event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
     event LogFundsWithdrawn(uint warrantCanaryID, uint amount);
+    event LogDeleted(uint warrantCanaryID);
 
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
@@ -140,6 +141,10 @@ contract WarrantCanary {
         public
         onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_) {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
+        require(warrantCanaries[warrantCanaryID_].enclosedFunds == 0,
+        "The warrant Canary is not empty and can not be deleted.");
+        delete warrantCanaries[warrantCanaryID_];
+        emit LogDeleted(warrantCanaryID_);
     }
 
     function Expiration(uint warrantCanaryID_) public view {
