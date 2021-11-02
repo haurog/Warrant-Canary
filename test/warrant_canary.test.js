@@ -11,13 +11,16 @@ contract("WarrantCanary", function (accounts) {
   let instance;
   let createTx;
   const purpose = "test the contract."
-  const expirationBlock = 0;
+  let expirationBlock;
+
 
   const fundsAdded = web3.utils.toWei('0.1', 'ether');
   const fundsWithdrawn = web3.utils.toWei('0.09', 'ether');
 
   beforeEach(async () => {
     instance = await WarrantCanary.new();
+    expirationBlock = await web3.eth.getBlockNumber();
+    // console.log("Current Block:" + expirationBlock);
     createTx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
   });
 
