@@ -13,6 +13,9 @@ contract("WarrantCanary", function (accounts) {
   const purpose = "test the contract."
   const expirationBlock = 111;
 
+  const fundsAdded = web3.utils.toWei('1', 'ether');
+  const fundsWithdrawn = web3.utils.toWei('0.9', 'ether');
+
   beforeEach(async () => {
     instance = await WarrantCanary.new();
     createTx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
@@ -41,10 +44,6 @@ contract("WarrantCanary", function (accounts) {
   });
 
   it("Testing adding and withdrawing funds", async () => {
-
-    const fundsAdded = web3.utils.toWei('1', 'ether');
-    const fundsWithdrawn = web3.utils.toWei('0.9', 'ether');
-    const test = web3.utils.toWei('1', 'ether')
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
     const withdrawTx = await instance.withdrawSomeFunds(0, fundsWithdrawn);
 
@@ -70,16 +69,6 @@ contract("WarrantCanary", function (accounts) {
     );
 
     truffleAssert.eventEmitted(
-      await instance.changeTrustedThirdParty(0, accounts[1]),
-      "LogChangedTrustedThirdParty"
-    );
-
-    await truffleAssert.passes(
-      await instance.withdrawAllFunds(0, { from: accounts[1] }),
-      "account 1 is now the trusted third party, so the transaction should pass."
-    );
-
-    truffleAssert.eventEmitted(
       await instance.withdrawAllFunds(0),
       "LogFundsWithdrawn"
     );
@@ -90,4 +79,66 @@ contract("WarrantCanary", function (accounts) {
       "Withdrawing everything does not remove all funds"
     );
   });
+
+  it("Testing third party access to funds", async () => {
+    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
+
+
+    await truffleAssert.reverts(
+      instance.withdrawSomeFunds(0, 10, { from: accounts[1] }),
+      truffleAssert.ErrorType.REVERT,
+      "only owner or trusted third party are allowed to withdraw funds"
+    );
+
+    truffleAssert.eventEmitted(
+      await instance.changeTrustedThirdParty(0, accounts[1]),
+      "LogChangedTrustedThirdParty"
+    );
+
+    await truffleAssert.passes(
+      await instance.withdrawAllFunds(0, { from: accounts[1] }),
+      "account 1 is now the trusted third party, so the transaction should pass."
+    );
+
+    result = await instance.warrantCanaries.call(0);
+
+    assert.equal(result.enclosedFunds, 0,
+      "Withdrawing everything does not remove all funds"
+    );
+  });
+
+  it("Testing expiration block for third party access to funds", async () => {
+    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
+
+    await instance.changeTrustedThirdParty(0, accounts[1]);
+
+    let currentBlockNumber = await web3.eth.getBlockNumber();
+
+    // set expiration into the future
+    truffleAssert.eventEmitted(
+      await instance.updateExpiration(0, currentBlockNumber + 10 ),
+      "LogExpirationUpdated"
+    );
+
+    await truffleAssert.reverts(
+      instance.withdrawAllFunds(0, { from: accounts[1] }),
+      truffleAssert.ErrorType.REVERT,
+      "Expiration Block is in the Future. Third party should not be able to withdraw."
+    );
+
+    currentBlockNumber = await web3.eth.getBlockNumber();
+    await instance.updateExpiration(0, currentBlockNumber);
+
+    await truffleAssert.passes(
+      instance.withdrawAllFunds(0, { from: accounts[1] }),
+      "Warrant Canary expired, so the transaction should pass."
+    );
+
+    result = await instance.warrantCanaries.call(0);
+
+    assert.equal(result.enclosedFunds, 0,
+      "Withdrawing everything does not remove all funds"
+    );
+  });
+
 });
