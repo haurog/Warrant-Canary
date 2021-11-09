@@ -173,7 +173,7 @@ contract WarrantCanary {
             array_[index] = array_[index + 1];
         }
         // delete last element
-        array_.pop;
+        array_.pop();
 
         return array_;
     }
