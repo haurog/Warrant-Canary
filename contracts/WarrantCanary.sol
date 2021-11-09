@@ -194,10 +194,4 @@ contract WarrantCanary {
     {
         return IDsTrusted[wcTrusted];
     }
-
-
-    function Expiration(uint warrantCanaryID_) public view {
-        // returns the expiration Block set in the warrantCanary
-    }
-
 }
