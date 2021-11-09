@@ -149,6 +149,7 @@ contract WarrantCanary {
 
         IDsOwned[wcOwner] = removeByValue(IDsOwned[wcOwner], warrantCanaryID_);
 
+
         if (wcTrusted != address(0)) {
             IDsTrusted[wcTrusted] = removeByValue(IDsTrusted[wcTrusted], warrantCanaryID_);
         }
@@ -177,6 +178,23 @@ contract WarrantCanary {
 
         return array_;
     }
+
+    function getIDsOwned(address wcOwner)
+        public
+        view
+        returns(uint[] memory)
+    {
+        return IDsOwned[wcOwner];
+    }
+
+    function getIDsTrusted(address wcTrusted)
+        public
+        view
+        returns(uint[] memory)
+    {
+        return IDsTrusted[wcTrusted];
+    }
+
 
     function Expiration(uint warrantCanaryID_) public view {
         // returns the expiration Block set in the warrantCanary
