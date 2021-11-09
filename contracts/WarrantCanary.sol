@@ -147,37 +147,34 @@ contract WarrantCanary {
         address wcOwner = warrantCanaries[warrantCanaryID_].warrantCanaryOwner;
         address wcTrusted = warrantCanaries[warrantCanaryID_].trustedThirdParty;
 
-        // uint[] memory tempArray = IDsOwned[wcOwner];
-        // IDsOwned[wcOwner] = deleteByValue(tempArray, warrantCanaryID_);
-        // IDsOwned[wcOwner].pop(); // remove last element
+        IDsOwned[wcOwner] = removeByValue(IDsOwned[wcOwner], warrantCanaryID_);
 
-        // if (wcTrusted != address(0)) {
-        //     tempArray = IDsTrusted[wcTrusted];
-        //     IDsTrusted[wcTrusted] = deleteByValue(tempArray, warrantCanaryID_);
-        //     IDsTrusted[wcTrusted].pop();
-        // }
-
-        //Need to remove traces from other 2 maps as well
+        if (wcTrusted != address(0)) {
+            IDsTrusted[wcTrusted] = removeByValue(IDsTrusted[wcTrusted], warrantCanaryID_);
+        }
 
         delete warrantCanaries[warrantCanaryID_];
 
         emit LogDeleted(warrantCanaryID_);
     }
 
-    function deleteByValue(uint[] memory array_, uint value_)
+    function removeByValue(uint[] storage array_, uint valueToDelete_)
         private
-        pure
-        returns(uint[] memory)
+        returns(uint[] storage)
     {
-        uint index = 0;
-        // find element
-        // TODO: the following for loop is very hacky
-        for(; index <= array_.length && array_[index] != value_ ; index++){}
+        // Keeps the order of the non removed elements (more expensive and not really necessary in this project)
 
-        // remove element
-        for (; index <= array_.length - 1; index++){
+        uint index = 0;
+        // find index of the value (is unique)
+        for(; index <= array_.length && array_[index] != valueToDelete_ ; index++){}
+
+        // shift all elements after index one element upwards
+        for (; index < array_.length - 1; index++){
             array_[index] = array_[index + 1];
         }
+        // delete last element
+        array_.pop;
+
         return array_;
     }
 
