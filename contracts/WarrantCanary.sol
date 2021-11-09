@@ -19,9 +19,9 @@ contract WarrantCanary {
         uint enclosedFunds;
     }
 
-    mapping(uint => warrantCanary) public  warrantCanaries;  // All warrant canaries by ID
-    mapping(address => uint[]) public IDsOwned;  // to store all warrant canaries that an address owns
-    mapping(address => uint[]) public IDsTrusted;  // to store all warrant canaries that have this trusted third party.
+    mapping(uint => warrantCanary) public  warrantCanaries;  // All warrant canaries accessed by IDs
+    mapping(address => uint[]) public IDsOwned;  // Store all warrant canaries that an address owns
+    mapping(address => uint[]) public IDsTrusted;  // Store all warrant canaries that have this address as a trusted third party
 
     event LogCreated(uint warrantCanaryID, string purpose,address trustedThirdParty);
     event LogExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
