@@ -6,6 +6,14 @@ const truffleAssert = require('truffle-assertions');
  * Ethereum client
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
+
+function convertArrayToSmallNumber(IDsOwned) {
+  for (i = 0; i < IDsOwned.length ; i++) {
+    IDsOwned[i] = IDsOwned[i].toNumber();
+  }
+}
+
+
 contract("WarrantCanary", function (accounts) {
 
   let instance;
@@ -138,27 +146,54 @@ contract("WarrantCanary", function (accounts) {
   });
 
   it("Tests that a warrant canary can be deleted", async () => {
-    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
+
+    let idToDelete = 3;
+    let numberOfCanaries = 5;  // total number after following for loop
+
+    // Add a few more warrant canaries with the same owner:
+    for (i = 1; i < numberOfCanaries; i++) {
+      await instance.createWarrantCanary(expirationBlock, purpose, accounts[i]);
+    }
+
+    const addFundsTx = await instance.addFunds(idToDelete, { value: fundsAdded });
+
+    let IDsOwned = await instance.getIDsOwned(accounts[0]);
+    convertArrayToSmallNumber(IDsOwned);
+    let IDsTrusted = await instance.getIDsTrusted(accounts[idToDelete]);
+    convertArrayToSmallNumber(IDsTrusted);
+
+    // Make sure owner and trusted party are set properly
+    assert(IDsOwned.indexOf(idToDelete) !== -1, "ID not in owned warrant canary IDs");
+    assert(IDsTrusted.indexOf(idToDelete) !== -1, "ID not in trusted warrant canary IDs");
 
 
     await truffleAssert.reverts(
-      instance.deleteWarrantCanary(0),
+      instance.deleteWarrantCanary(idToDelete),
       truffleAssert.ErrorType.REVERT,
       "There are still funds enclosed. Warrant Canary cannot be deleted."
     );
 
-    await instance.withdrawAllFunds(0);
+    await instance.withdrawAllFunds(idToDelete);
 
     truffleAssert.eventEmitted(
-      await instance.deleteWarrantCanary(0),
+      await instance.deleteWarrantCanary(idToDelete),
       "LogDeleted"
     );
 
-    result = await instance.warrantCanaries.call(0);
+    result = await instance.warrantCanaries.call(idToDelete);
 
     assert.equal(result.warrantCanaryOwner, 0,
       "Warrant Canary has not been deleted."
     );
+
+    IDsOwned = await instance.getIDsOwned(accounts[0]);
+    convertArrayToSmallNumber(IDsOwned);
+    IDsTrusted = await instance.getIDsTrusted(accounts[idToDelete]);
+    convertArrayToSmallNumber(IDsTrusted);
+
+    // Make sure that the IDs have been deleted in respective the mappings
+    assert(IDsOwned.indexOf(idToDelete) === -1, "ID is still in owned warrant canary IDs");
+    assert(IDsTrusted.indexOf(idToDelete) === -1, "ID is still in trusted warrant canary IDs");
 
   });
 
