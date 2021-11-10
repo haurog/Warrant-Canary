@@ -85,12 +85,6 @@ contract WarrantCanary {
 
     }
 
-    function createWarrantCanarySimple(uint expirationBlock_, string memory purpose_)
-        public
-    {
-        createWarrantCanary(expirationBlock_, purpose_, payable(address(0)));
-    }
-
     function updateExpiration(uint warrantCanaryID_, uint newExpirationBlock_)
         public
         onlyCanaryOwner(warrantCanaryID_)

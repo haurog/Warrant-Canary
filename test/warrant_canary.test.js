@@ -29,7 +29,7 @@ contract("WarrantCanary", function (accounts) {
     instance = await WarrantCanary.new();
     expirationBlock = await web3.eth.getBlockNumber();
     // console.log("Current Block:" + expirationBlock);
-    createTx = await instance.createWarrantCanarySimple(expirationBlock, purpose);
+    createTx = await instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000');
   });
 
   it("Creating Warrant Canary and store necessary information", async () => {
