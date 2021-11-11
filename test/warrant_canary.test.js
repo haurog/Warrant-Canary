@@ -61,16 +61,28 @@ contract("WarrantCanary", function (accounts) {
     stateofWC = await instance.warrantCanaries.call(0);
     blocknumberNow = await web3.eth.getBlockNumber();
     assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
-      "The lastUpdatedInBLocknumber is not updated when changing trusted third party.",
+      "The lastUpdatedInBLocknumber is not updated when changing trusted third party",
     );
 
     await instance.updateExpiration(0, blocknumberNow + 10);;
     stateofWC = await instance.warrantCanaries.call(0);
     blocknumberNow = await web3.eth.getBlockNumber();
     assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
-      "The lastUpdatedInBLocknumber is not updated when changing the expiration.",
+      "The lastUpdatedInBLocknumber is not updated when changing the expiration",
     );
+  });
 
+  it("Testing ownable library", async () => {
+    let owner = await instance.owner();
+    assert.equal(owner, accounts[0], "The owner of the contract has not been set properly")
+
+    await instance.transferOwnership(accounts[1])
+    owner = await instance.owner();
+    assert.equal(owner, accounts[1], "The owner of the contract has not been set properly")
+
+    await instance.renounceOwnership({from: accounts[1]});
+    owner = await instance.owner();
+    assert.equal(owner, 0, "The owner of the contract has not been set properly")
   });
 
   it("Testing adding and withdrawing funds", async () => {
