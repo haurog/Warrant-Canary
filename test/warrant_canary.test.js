@@ -54,6 +54,13 @@ contract("WarrantCanary", function (accounts) {
   });
 
   it("Testing adding and withdrawing funds", async () => {
+    await truffleAssert.reverts(
+      instance.addFunds(0, { value: fundsAdded }),
+      truffleAssert.ErrorType.REVERT,
+      "Trusted Third Party has not been set, so transaction should revert"
+    );
+
+    await instance.changeTrustedThirdParty(0, accounts[5]);
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
     const withdrawTx = await instance.withdrawSomeFunds(0, fundsWithdrawn);
 
@@ -85,6 +92,7 @@ contract("WarrantCanary", function (accounts) {
   });
 
   it("Testing third party access to funds", async () => {
+    await instance.changeTrustedThirdParty(0, accounts[5]);
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
 
 
@@ -112,9 +120,8 @@ contract("WarrantCanary", function (accounts) {
   });
 
   it("Testing expiration block for third party access to funds", async () => {
-    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
-
     await instance.changeTrustedThirdParty(0, accounts[1]);
+    const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
 
     let currentBlockNumber = await web3.eth.getBlockNumber();
 

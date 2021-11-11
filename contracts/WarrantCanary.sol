@@ -48,6 +48,14 @@ contract WarrantCanary {
         _;
     }
 
+    modifier FundsOnlyWithThirdParty(address trustedThirdParty_) {
+        // only allow funding if a trusted third party is chosen
+        if (trustedThirdParty_ == address(0)) {
+            require(msg.value == 0, "Funds can only be sent to warrant canaries with a trusted third party set.");
+        }
+        _;
+    }
+
     modifier updateLastUpdatedInBlock(uint warrantCanaryID) {
         _;
         warrantCanaries[warrantCanaryID].lastUpdatedInBlock = block.number;
@@ -60,7 +68,9 @@ contract WarrantCanary {
     )
         public
         payable
+        FundsOnlyWithThirdParty(trustedThirdParty_)
     {
+
         // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
         warrantCanaries[IDcount] = warrantCanary(
         {
@@ -95,7 +105,11 @@ contract WarrantCanary {
         emit LogExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
     }
 
-    function addFunds(uint warrantCanaryID_) public payable{
+    function addFunds(uint warrantCanaryID_)
+    public
+    payable
+    FundsOnlyWithThirdParty(warrantCanaries[warrantCanaryID_].trustedThirdParty)
+    {
         warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
         emit LogFundsAdded(warrantCanaryID_, msg.value);
     }
