@@ -89,6 +89,13 @@ contract("WarrantCanary", function (accounts) {
     assert.equal(result.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
+
+    await truffleAssert.reverts(
+      instance.send(fundsAdded, {from: accounts[0]}),
+      truffleAssert.ErrorType.REVERT,
+      "Contract should not be allowed to receive plain ETH without calling a function"
+    );
+
   });
 
   it("Testing third party access to funds", async () => {
