@@ -1,0 +1,26 @@
+{
+  "name": "blockchain-developer-bootcamp-final-project",
+  "version": "1.0.0",
+  "description": "The idea of this project is to build a warrant canary contract, which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp (blocknumber) in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haurog/blockchain-developer-bootcamp-final-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haurog/blockchain-developer-bootcamp-final-project/issues"
+  },
+  "homepage": "https://github.com/haurog/blockchain-developer-bootcamp-final-project#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2"
+  }
+}
