@@ -60,8 +60,6 @@ contract("WarrantCanary", function (accounts) {
     await instance.changeTrustedThirdParty(0, accounts[5]);
     stateofWC = await instance.warrantCanaries.call(0);
     blocknumberNow = await web3.eth.getBlockNumber();
-    console.log(blocknumberNow);
-    console.log(stateofWC.lastUpdatedInBlock);
     assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
       "The lastUpdatedInBLocknumber is not updated when changing trusted third party.",
     );
@@ -69,8 +67,6 @@ contract("WarrantCanary", function (accounts) {
     await instance.updateExpiration(0, blocknumberNow + 10);;
     stateofWC = await instance.warrantCanaries.call(0);
     blocknumberNow = await web3.eth.getBlockNumber();
-    console.log(blocknumberNow);
-    console.log(stateofWC.lastUpdatedInBlock);
     assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
       "The lastUpdatedInBLocknumber is not updated when changing the expiration.",
     );
