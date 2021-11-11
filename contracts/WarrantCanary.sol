@@ -29,8 +29,6 @@ contract WarrantCanary {
     event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
     event LogFundsWithdrawn(uint warrantCanaryID, uint amount);
     event LogDeleted(uint warrantCanaryID);
-    event LogUpdatedLastUpdatedInBlock(uint warrantCanaryID);
-
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner,
@@ -202,6 +200,5 @@ contract WarrantCanary {
 
     function updateLastUpdatedInBlock(uint warrantCanaryID_) internal {
         warrantCanaries[warrantCanaryID_].lastUpdatedInBlock = block.number;
-        emit LogUpdatedLastUpdatedInBlock(warrantCanaryID_);
     }
 }
