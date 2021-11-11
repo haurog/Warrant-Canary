@@ -1,3 +1,4 @@
 .vscode/settings.json
 .env
 build/
+node_modules/
