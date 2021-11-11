@@ -38,19 +38,43 @@ contract("WarrantCanary", function (accounts) {
       "creating a warrant canary should emit a Created event",
     );
 
-    const result = await instance.warrantCanaries.call(0);
+    let stateofWC = await instance.warrantCanaries.call(0);
     // console.log("Purpose: " + result.purpose);
 
-    assert.equal(result.purpose, purpose,
+    assert.equal(stateofWC.purpose, purpose,
       "The purpose is not stored correctly",
     );
-    assert.equal(result.expirationBlock, expirationBlock,
+    assert.equal(stateofWC.expirationBlock, expirationBlock,
       "The expirationBlock is not stored properly.",
     );
 
-    assert.equal(result.warrantCanaryOwner, accounts[0],
+    assert.equal(stateofWC.warrantCanaryOwner, accounts[0],
       "The owner of the warrant Canary is not set properly",
     );
+
+    blocknumberNow = await web3.eth.getBlockNumber();
+    assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
+      "The lastUpdatedInBLocknumber is wrong.",
+    );
+
+    await instance.changeTrustedThirdParty(0, accounts[5]);
+    stateofWC = await instance.warrantCanaries.call(0);
+    blocknumberNow = await web3.eth.getBlockNumber();
+    console.log(blocknumberNow);
+    console.log(stateofWC.lastUpdatedInBlock);
+    assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
+      "The lastUpdatedInBLocknumber is not updated when changing trusted third party.",
+    );
+
+    await instance.updateExpiration(0, blocknumberNow + 10);;
+    stateofWC = await instance.warrantCanaries.call(0);
+    blocknumberNow = await web3.eth.getBlockNumber();
+    console.log(blocknumberNow);
+    console.log(stateofWC.lastUpdatedInBlock);
+    assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
+      "The lastUpdatedInBLocknumber is not updated when changing the expiration.",
+    );
+
   });
 
   it("Testing adding and withdrawing funds", async () => {
@@ -72,10 +96,10 @@ contract("WarrantCanary", function (accounts) {
       "Withdrawing funds should emit an event",
     );
 
-    let result = await instance.warrantCanaries.call(0);
+    let stateofWC = await instance.warrantCanaries.call(0);
 
     // console.log("added: " + fundsAdded + " withdrawn: " + fundsWithdrawn + " enclosed: " + result.enclosedFunds);
-    assert.equal(result.enclosedFunds, fundsAdded - fundsWithdrawn,
+    assert.equal(stateofWC.enclosedFunds, fundsAdded - fundsWithdrawn,
       "Enclosed Funds does not equal added minus withdrawn funds"
     )
 
@@ -84,9 +108,9 @@ contract("WarrantCanary", function (accounts) {
       "LogFundsWithdrawn"
     );
 
-    result = await instance.warrantCanaries.call(0);
+    stateofWC = await instance.warrantCanaries.call(0);
 
-    assert.equal(result.enclosedFunds, 0,
+    assert.equal(stateofWC.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
 
@@ -119,9 +143,9 @@ contract("WarrantCanary", function (accounts) {
       "account 1 is now the trusted third party, so the transaction should pass."
     );
 
-    result = await instance.warrantCanaries.call(0);
+    stateofWC = await instance.warrantCanaries.call(0);
 
-    assert.equal(result.enclosedFunds, 0,
+    assert.equal(stateofWC.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
   });
@@ -152,9 +176,9 @@ contract("WarrantCanary", function (accounts) {
       "Warrant Canary expired, so the transaction should pass."
     );
 
-    result = await instance.warrantCanaries.call(0);
+    stateofWC = await instance.warrantCanaries.call(0);
 
-    assert.equal(result.enclosedFunds, 0,
+    assert.equal(stateofWC.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
   });
@@ -194,9 +218,9 @@ contract("WarrantCanary", function (accounts) {
       "LogDeleted"
     );
 
-    result = await instance.warrantCanaries.call(idToDelete);
+    stateofWC = await instance.warrantCanaries.call(idToDelete);
 
-    assert.equal(result.warrantCanaryOwner, 0,
+    assert.equal(stateofWC.warrantCanaryOwner, 0,
       "Warrant Canary has not been deleted."
     );
 
