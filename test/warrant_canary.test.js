@@ -51,7 +51,10 @@ contract("WarrantCanary", function (accounts) {
     assert.equal(stateofWC.warrantCanaryOwner, accounts[0],
       "The owner of the warrant Canary is not set properly",
     );
+  });
 
+  it("Test that lastUpdatedInBlock state is set properly", async () => {
+    let stateofWC = await instance.warrantCanaries.call(0);
     blocknumberNow = await web3.eth.getBlockNumber();
     assert.equal(stateofWC.lastUpdatedInBlock, blocknumberNow,
       "The lastUpdatedInBLocknumber is wrong.",
@@ -127,7 +130,6 @@ contract("WarrantCanary", function (accounts) {
       truffleAssert.ErrorType.REVERT,
       "Contract should not be allowed to receive plain ETH without calling a function"
     );
-
   });
 
   it("Testing third party access to funds", async () => {
