@@ -12,7 +12,7 @@ contract WarrantCanary {
     struct warrantCanary {
         uint ID;
         uint expirationBlock;
-        uint lastUpdatedInBlock;
+        uint lastUpdatedInBlock;  // tracks in which block expiration or trusted third party has been changed
         string purpose;
         address payable warrantCanaryOwner;
         address payable trustedThirdParty;
@@ -29,6 +29,7 @@ contract WarrantCanary {
     event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
     event LogFundsWithdrawn(uint warrantCanaryID, uint amount);
     event LogDeleted(uint warrantCanaryID);
+    event LogUpdatedLastUpdatedInBlock(uint warrantCanaryID);
 
 
     modifier onlyCanaryOwner(uint warrantCanaryID) {
@@ -54,11 +55,6 @@ contract WarrantCanary {
             require(msg.value == 0, "Funds can only be sent to warrant canaries with a trusted third party set.");
         }
         _;
-    }
-
-    modifier updateLastUpdatedInBlock(uint warrantCanaryID) {
-        _;
-        warrantCanaries[warrantCanaryID].lastUpdatedInBlock = block.number;
     }
 
     function createWarrantCanary(
@@ -98,10 +94,10 @@ contract WarrantCanary {
     function updateExpiration(uint warrantCanaryID_, uint newExpirationBlock_)
         public
         onlyCanaryOwner(warrantCanaryID_)
-        updateLastUpdatedInBlock(warrantCanaryID_)
     {
         uint oldExpirationBlock = warrantCanaries[warrantCanaryID_].expirationBlock;
         warrantCanaries[warrantCanaryID_].expirationBlock = newExpirationBlock_;
+        updateLastUpdatedInBlock(warrantCanaryID_);
         emit LogExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
     }
 
@@ -120,10 +116,11 @@ contract WarrantCanary {
     )
         public
         onlyCanaryOwner(warrantCanaryID_)
-        updateLastUpdatedInBlock(warrantCanaryID_)
+
     {
         address oldTrustedThirdParty = warrantCanaries[warrantCanaryID_].trustedThirdParty;
         warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
+        updateLastUpdatedInBlock(warrantCanaryID_);
         emit LogChangedTrustedThirdParty(warrantCanaryID_, oldTrustedThirdParty, newTrustedThirdParty_);
     }
 
@@ -201,5 +198,10 @@ contract WarrantCanary {
         returns(uint[] memory)
     {
         return IDsTrusted[wcTrusted];
+    }
+
+    function updateLastUpdatedInBlock(uint warrantCanaryID_) internal {
+        warrantCanaries[warrantCanaryID_].lastUpdatedInBlock = block.number;
+        emit LogUpdatedLastUpdatedInBlock(warrantCanaryID_);
     }
 }
