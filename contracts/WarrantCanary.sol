@@ -2,9 +2,10 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/*
-*
-*/
+/// @title Warrant Canary with enclosed funds
+/// @author haurog
+/// @notice  A warrant canary contract implementation which allows enclosed funds (ETH only) to be withdrawn by a third party upon expiration
+/// @dev
 
 contract WarrantCanary is Ownable {
 
