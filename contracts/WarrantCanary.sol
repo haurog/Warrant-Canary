@@ -58,8 +58,7 @@ contract WarrantCanary is Ownable, Pausable {
         _;
     }
 
-    constructor() Pausable() {}
-
+    // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
     function createWarrantCanary(
         uint expirationBlock_,
         string memory purpose_,
@@ -70,8 +69,6 @@ contract WarrantCanary is Ownable, Pausable {
         FundsOnlyWithThirdParty(trustedThirdParty_)
         whenNotPaused()
     {
-
-        // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
         warrantCanaries[IDcount] = warrantCanary(
         {
             ID : IDcount,
