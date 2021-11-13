@@ -75,7 +75,7 @@ contract("WarrantCanary", function (accounts) {
     );
   });
 
-  it("Testing ownable library", async () => {
+  it("Testing Ownable library", async () => {
     let owner = await instance.owner();
     assert.equal(owner, accounts[0], "The owner of the contract has not been set properly")
 
@@ -86,6 +86,44 @@ contract("WarrantCanary", function (accounts) {
     await instance.renounceOwnership({from: accounts[1]});
     owner = await instance.owner();
     assert.equal(owner, 0, "The owner of the contract has not been set properly")
+  });
+
+  it("Testing Pausable library", async () => {
+    await instance.changeTrustedThirdParty(0, accounts[1]);
+
+    instance.togglePauseState();
+
+    await truffleAssert.reverts(
+      instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000'),
+      truffleAssert.ErrorType.REVERT,
+      "Contract is pause so adding funds should fail"
+    );
+
+    await truffleAssert.reverts(
+      instance.addFunds(0, { value: fundsAdded }),
+      truffleAssert.ErrorType.REVERT,
+      "Contract is paused so adding funds should fail"
+    );
+
+    await truffleAssert.passes(
+      instance.withdrawAllFunds(0),
+      "Contract is paused withdrawing should still work"
+    );
+
+    await truffleAssert.reverts(
+      instance.togglePauseState({ from: accounts[1] }),
+      truffleAssert.ErrorType.REVERT,
+      "Only owner should be able to toggle the pause state of the contract"
+    );
+
+    instance.togglePauseState();
+
+    await truffleAssert.passes(
+      instance.addFunds(0, { value: fundsAdded }),
+      "Contract is unpaused again, so adding funds should be possible"
+    );
+
+    await instance.withdrawAllFunds(0);
   });
 
   it("Testing adding and withdrawing funds", async () => {
