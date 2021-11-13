@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 /// @title Warrant Canary with enclosed funds
 /// @author haurog
 /// @notice  A warrant canary contract implementation which allows enclosed funds (ETH only) to be withdrawn by a third party upon expiration
 /// @dev
 
-contract WarrantCanary is Ownable {
+contract WarrantCanary is Ownable, Pausable {
 
     address adminOwner;
     uint public IDcount;
@@ -57,6 +58,8 @@ contract WarrantCanary is Ownable {
         _;
     }
 
+    constructor() Pausable() {}
+
     function createWarrantCanary(
         uint expirationBlock_,
         string memory purpose_,
@@ -65,6 +68,7 @@ contract WarrantCanary is Ownable {
         public
         payable
         FundsOnlyWithThirdParty(trustedThirdParty_)
+        whenNotPaused()
     {
 
         // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
@@ -105,6 +109,7 @@ contract WarrantCanary is Ownable {
     public
     payable
     FundsOnlyWithThirdParty(warrantCanaries[warrantCanaryID_].trustedThirdParty)
+    whenNotPaused()
     {
         warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
         emit LogFundsAdded(warrantCanaryID_, msg.value);
@@ -202,5 +207,11 @@ contract WarrantCanary is Ownable {
 
     function updateLastUpdatedInBlock(uint warrantCanaryID_) internal {
         warrantCanaries[warrantCanaryID_].lastUpdatedInBlock = block.number;
+    }
+
+    function togglePauseState() public onlyOwner(){
+        if (paused()) {_unpause();}
+        else {_pause();}
+
     }
 }
