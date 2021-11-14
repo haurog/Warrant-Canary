@@ -13,6 +13,26 @@ function convertArrayToSmallNumber(IDsOwned) {
   }
 }
 
+function calculateNextContractAddress(account_, nonce_) {
+  // This function calculates the next address where a contract will be deployed
+  // adapted from: https://ethereum.stackexchange.com/questions/760/how-is-the-address-of-an-ethereum-contract-computed/761#761
+  const rlp = require('rlp');
+  const keccak = require('keccak');
+
+  var nonce = nonce_;
+  var sender = account_;
+
+  var input_arr = [ sender, nonce ];
+  var rlp_encoded = rlp.encode(input_arr);
+
+  var contract_address_long = keccak('keccak256').update(rlp_encoded).digest('hex');
+
+  var contract_address = contract_address_long.substring(24); //Trim the first 24 characters.
+  console.log("contract_address: " + contract_address);
+
+  return contract_address;
+}
+
 
 contract("WarrantCanary", function (accounts) {
 
@@ -20,7 +40,7 @@ contract("WarrantCanary", function (accounts) {
   let createTx;
   const purpose = "test the contract."
   let expirationBlock;
-
+  let nextContractAddress;
 
   const fundsAdded = web3.utils.toWei('0.1', 'ether');
   const fundsWithdrawn = web3.utils.toWei('0.09', 'ether');
@@ -28,8 +48,8 @@ contract("WarrantCanary", function (accounts) {
   beforeEach(async () => {
     instance = await WarrantCanary.new();
     expirationBlock = await web3.eth.getBlockNumber();
-    // console.log("Current Block:" + expirationBlock);
     createTx = await instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000');
+    // nextContractAddress = calculateNextContractAddress(accounts[0], await web3.eth.getTransactionCount(accounts[0]));
   });
 
   it("Creating Warrant Canary and store necessary information", async () => {
@@ -229,6 +249,9 @@ contract("WarrantCanary", function (accounts) {
     assert.equal(stateofWC.enclosedFunds, 0,
       "Withdrawing everything does not remove all funds"
     );
+
+    nextContractAddress = calculateNextContractAddress(accounts[0], await web3.eth.getTransactionCount(accounts[0]));
+
   });
 
   it("Tests that a warrant canary can be deleted", async () => {
