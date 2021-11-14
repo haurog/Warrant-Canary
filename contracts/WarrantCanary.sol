@@ -206,6 +206,10 @@ contract WarrantCanary is Ownable, Pausable {
         warrantCanaries[warrantCanaryID_].lastUpdatedInBlock = block.number;
     }
 
+
+    // The following functions are admin functions (owner of the contract only)
+    // Therefore they are very minimal without events emitted.
+
     function togglePauseState() public onlyOwner() {
         if (paused()) {_unpause();}
         else {_pause();}
