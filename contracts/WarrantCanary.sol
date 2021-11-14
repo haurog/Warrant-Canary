@@ -223,6 +223,4 @@ contract WarrantCanary is Ownable, Pausable {
         }
         payable(msg.sender).transfer(address(this).balance - allEnclosedFunds);
     }
-
-
 }
