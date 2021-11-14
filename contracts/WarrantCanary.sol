@@ -206,9 +206,19 @@ contract WarrantCanary is Ownable, Pausable {
         warrantCanaries[warrantCanaryID_].lastUpdatedInBlock = block.number;
     }
 
-    function togglePauseState() public onlyOwner(){
+    function togglePauseState() public onlyOwner() {
         if (paused()) {_unpause();}
         else {_pause();}
-
     }
+
+    function retrieveExcessFunds() public onlyOwner() {
+        uint allEnclosedFunds;
+        for(uint i = 0; i < IDcount; i++)
+        {
+            allEnclosedFunds += warrantCanaries[i].enclosedFunds;
+        }
+        payable(msg.sender).transfer(address(this).balance - allEnclosedFunds);
+    }
+
+
 }
