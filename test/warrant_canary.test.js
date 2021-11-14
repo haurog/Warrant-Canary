@@ -28,7 +28,7 @@ function calculateNextContractAddress(account_, nonce_) {
   var contract_address_long = keccak('keccak256').update(rlp_encoded).digest('hex');
 
   var contract_address = contract_address_long.substring(24); //Trim the first 24 characters.
-  console.log("contract_address: " + contract_address);
+  // console.log("next contract address: " + contract_address);
 
   return contract_address;
 }
@@ -44,6 +44,7 @@ contract("WarrantCanary", function (accounts) {
 
   const fundsAdded = web3.utils.toWei('0.1', 'ether');
   const fundsWithdrawn = web3.utils.toWei('0.09', 'ether');
+  const excessFundsAdded = web3.utils.toWei('0.254', 'ether');
 
   beforeEach(async () => {
     instance = await WarrantCanary.new();
@@ -250,8 +251,6 @@ contract("WarrantCanary", function (accounts) {
       "Withdrawing everything does not remove all funds"
     );
 
-    nextContractAddress = calculateNextContractAddress(accounts[0], await web3.eth.getTransactionCount(accounts[0]));
-
   });
 
   it("Tests that a warrant canary can be deleted", async () => {
@@ -303,6 +302,49 @@ contract("WarrantCanary", function (accounts) {
     // Make sure that the IDs have been deleted in respective the mappings
     assert(IDsOwned.indexOf(idToDelete) === -1, "ID is still in owned warrant canary IDs");
     assert(IDsTrusted.indexOf(idToDelete) === -1, "ID is still in trusted warrant canary IDs");
+
+  });
+
+  it("Preparing Blockchain for the next test", async () => {
+    // This is to prepare the blockchain for the next test (preload contract address with ETH)
+    nextContractAddress = calculateNextContractAddress(accounts[0], await web3.eth.getTransactionCount(accounts[0]));
+    await web3.eth.sendTransaction(
+      {
+        from: accounts[1],
+        to: nextContractAddress, // doesn't need to exist
+        value: excessFundsAdded,
+        gasLimit: 90000
+      }
+    );
+
+    assert.equal(await web3.eth.getBalance(nextContractAddress), excessFundsAdded,
+      "The funds have not been added to the expected contract address");
+  });
+
+  it("Test if owner can withdraw excess funds", async () => {
+    numberOfCanaries = 5;
+    assert.equal(await web3.eth.getBalance(instance.address), excessFundsAdded,
+      "The contract address is empty");
+
+    // Add a few more warrant canaries with the same owner and add some funds:
+    for (i = 1; i < numberOfCanaries; i++) {
+      await instance.createWarrantCanary(expirationBlock, purpose, accounts[1], { value: fundsAdded });
+    }
+
+    let addressBalanceBefore = await web3.eth.getBalance(instance.address);
+    await instance.retrieveExcessFunds();
+    let addressBalanceAfter = await web3.eth.getBalance(instance.address);
+
+    // console.log("before: " + addressBalanceBefore);
+    // console.log("after:  " + addressBalanceAfter);
+
+    assert(addressBalanceBefore - addressBalanceAfter == excessFundsAdded,
+      "Owner could not retrieve excess funds");
+
+    // get ETH back
+    for (i = 1; i < numberOfCanaries; i++) {
+      await instance.withdrawAllFunds(i);
+    }
 
   });
 
