@@ -1,6 +1,6 @@
 # Adapted from https://limcheekin.medium.com/solidity-and-truffle-continuous-integration-setup-with-github-actions-221149eabcca
 
-name: Truffle Tests
+name: Truffle Tests Extended
 
 on:
   push:
