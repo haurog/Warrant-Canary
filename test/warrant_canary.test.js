@@ -166,6 +166,12 @@ contract("WarrantCanary", function (accounts) {
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
     const withdrawTx = await instance.withdrawSomeFunds(0, fundsWithdrawn);
 
+    await truffleAssert.reverts(
+      instance.withdrawSomeFunds(0, fundsAdded),
+      truffleAssert.ErrorType.REVERT,
+      "Trying to withdraw more funds than enclosed should revert"
+    );
+
     assert.equal(addFundsTx.logs[0].event, "LogFundsAdded",
       "adding funds should emit an event",
     );
@@ -259,6 +265,12 @@ contract("WarrantCanary", function (accounts) {
       "Withdrawing everything does not remove all funds"
     );
 
+    await truffleAssert.reverts(
+      instance.updateExpiration(0, currentTime + 1, {from: accounts[1]}),
+      truffleAssert.ErrorType.REVERT,
+      "Only the Warrant Canary owner should be able to change the expiration Time"
+    );
+
   });
 
   it("Tests that a warrant canary can be deleted", async () => {
@@ -310,6 +322,13 @@ contract("WarrantCanary", function (accounts) {
     // Make sure that the IDs have been deleted in respective the mappings
     assert(IDsOwned.indexOf(idToDelete) === -1, "ID is still in owned warrant canary IDs");
     assert(IDsTrusted.indexOf(idToDelete) === -1, "ID is still in trusted warrant canary IDs");
+
+    // Test to improve branching coverage with address 0
+    truffleAssert.eventEmitted(
+      await instance.deleteWarrantCanary(0),
+      "LogDeleted"
+    );
+
 
   });
 
