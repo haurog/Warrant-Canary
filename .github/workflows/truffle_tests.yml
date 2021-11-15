@@ -33,10 +33,10 @@ jobs:
       run: npm install
 
     - name: Install Ganache
-      run: npm install ganache-cli -g
+      run: npm install ganache-cli -g | ganache-cli &
 
     - name: Run Truffle Test
-      run: ganache-cli & | truffle test
+      run:  truffle test
 
 
 # name: Truffle Build
