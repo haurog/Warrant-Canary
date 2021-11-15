@@ -1,3 +1,5 @@
+# Adapted from https://limcheekin.medium.com/solidity-and-truffle-continuous-integration-setup-with-github-actions-221149eabcca
+
 name: Truffle Tests
 
 on:
@@ -21,11 +23,11 @@ jobs:
     - name: Show NodeJS version
       run: npm --version
 
-    - name: Create .env file
-      run: echo "${{ secrets.DOT_ENV }}" > .env
+    # - name: Create .env file
+    #   run: echo "${{ secrets.DOT_ENV }}" > .env
 
     - name: Install Truffle and ganache
-      run: npm install truffle ganache-cli -g -g
+      run: npm install truffle ganache-cli -g
 
     - name: Install Truffle Dependencies
       run: npm install
@@ -37,16 +39,14 @@ jobs:
 
     - name: Run Codechecks
       run: npx codechecks
-      env:
-        CC_SECRET: ${{ secrets.CC_SECRET }}
 
     - name: Run Test Coverage
       run: truffle run coverage
 
-    - name: Generate .coveralls.yml file
-      run: echo "${{ secrets.DOT_COVERALLS_YML }}" > .coveralls.yml
-    - name: Send Coverage Info to CoverAlls
-      run: cat coverage/lcov.info | npx coveralls
+    # - name: Generate .coveralls.yml file
+    #   run: echo "${{ secrets.DOT_COVERALLS_YML }}" > .coveralls.yml
+    # - name: Send Coverage Info to CoverAlls
+    #   run: cat coverage/lcov.info | npx coveralls
 
     - name: Setup Python 3.8
       uses: actions/setup-python@v2

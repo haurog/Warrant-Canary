@@ -36,7 +36,7 @@ module.exports = {
           host: 'localhost',
           port: 9545,
           network_id: '*'
-      },
+        },
 
         rinkeby: {
           provider: () => new HDWalletProvider(process.env.MNEMONIC, infuraURL),
@@ -44,7 +44,11 @@ module.exports = {
           gas: 5500000,
         },
     },
-
+  plugins: ["solidity-coverage"],
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions: {excludeContracts: ['Migrations']}
+  },
 
   // Configure your compilers
   compilers: {

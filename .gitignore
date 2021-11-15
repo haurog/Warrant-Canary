@@ -2,3 +2,6 @@
 .env
 build/
 node_modules/
+coverage/
+coverage.json
+gasReporterOutput.json
