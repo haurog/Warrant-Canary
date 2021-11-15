@@ -39,7 +39,7 @@ contract("WarrantCanary", function (accounts) {
   let instance;
   let createTx;
   const purpose = "test the contract."
-  let expirationBlock;
+  let expirationTime;
   let nextContractAddress;
 
   const fundsAdded = web3.utils.toWei('0.1', 'ether');
@@ -48,8 +48,8 @@ contract("WarrantCanary", function (accounts) {
 
   beforeEach(async () => {
     instance = await WarrantCanary.new();
-    expirationBlock = await web3.eth.getBlockNumber();
-    createTx = await instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000');
+    expirationTime = Math.floor(Date.now() / 1000); // unix timestamp now  // await web3.eth.getBlockTimestamp();
+    createTx = await instance.createWarrantCanary(expirationTime, purpose, '0x0000000000000000000000000000000000000000');
     // nextContractAddress = calculateNextContractAddress(accounts[0], await web3.eth.getTransactionCount(accounts[0]));
   });
 
@@ -65,8 +65,8 @@ contract("WarrantCanary", function (accounts) {
     assert.equal(stateofWC.purpose, purpose,
       "The purpose is not stored correctly",
     );
-    assert.equal(stateofWC.expirationBlock, expirationBlock,
-      "The expirationBlock is not stored properly.",
+    assert.equal(stateofWC.expirationTime, expirationTime,
+      "The expirationTime is not stored properly.",
     );
 
     assert.equal(stateofWC.warrantCanaryOwner, accounts[0],
@@ -121,7 +121,7 @@ contract("WarrantCanary", function (accounts) {
     instance.pauseContract();
 
     await truffleAssert.reverts(
-      instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000'),
+      instance.createWarrantCanary(expirationTime, purpose, '0x0000000000000000000000000000000000000000'),
       truffleAssert.ErrorType.REVERT,
       "Contract is pause so adding funds should fail"
     );
@@ -231,11 +231,11 @@ contract("WarrantCanary", function (accounts) {
     await instance.changeTrustedThirdParty(0, accounts[1]);
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
 
-    let currentBlockNumber = await web3.eth.getBlockNumber();
+    let currentTime = Math.floor(Date.now() / 1000); //await web3.eth.getBlockNumber();
 
     // set expiration into the future
     truffleAssert.eventEmitted(
-      await instance.updateExpiration(0, currentBlockNumber + 10 ),
+      await instance.updateExpiration(0, currentTime + 10000 ),
       "LogExpirationUpdated"
     );
 
@@ -246,7 +246,7 @@ contract("WarrantCanary", function (accounts) {
     );
 
     currentBlockNumber = await web3.eth.getBlockNumber();
-    await instance.updateExpiration(0, currentBlockNumber);
+    await instance.updateExpiration(0, currentTime);
 
     await truffleAssert.passes(
       instance.withdrawAllFunds(0, { from: accounts[1] }),
@@ -268,7 +268,7 @@ contract("WarrantCanary", function (accounts) {
 
     // Add a few more warrant canaries with the same owner:
     for (i = 1; i < numberOfCanaries; i++) {
-      await instance.createWarrantCanary(expirationBlock, purpose, accounts[i]);
+      await instance.createWarrantCanary(expirationTime, purpose, accounts[i]);
     }
 
     const addFundsTx = await instance.addFunds(idToDelete, { value: fundsAdded });
@@ -336,7 +336,7 @@ contract("WarrantCanary", function (accounts) {
 
     // Add a few more warrant canaries with the same owner and add some funds:
     for (i = 1; i < numberOfCanaries; i++) {
-      await instance.createWarrantCanary(expirationBlock, purpose, accounts[1], { value: fundsAdded });
+      await instance.createWarrantCanary(expirationTime, purpose, accounts[1], { value: fundsAdded });
     }
 
     let addressBalanceBefore = await web3.eth.getBalance(instance.address);

@@ -14,7 +14,7 @@ contract WarrantCanary is Ownable, Pausable {
     uint public IDcount;
     struct warrantCanary {
         uint ID;
-        uint expirationBlock;
+        uint expirationTime;
         uint lastUpdatedInBlock;  // tracks in which block expiration or trusted third party has been changed
         string purpose;
         address payable warrantCanaryOwner;
@@ -44,7 +44,7 @@ contract WarrantCanary is Ownable, Pausable {
                 msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty,
                 "You are neither the owner or trusted third party of this warrant canary");
         if (msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty) {
-            require(block.number >= warrantCanaries[warrantCanaryID].expirationBlock,
+            require(block.timestamp >= warrantCanaries[warrantCanaryID].expirationTime,
                 "Warrant canary has not expired yet");
         }
         _;
@@ -60,7 +60,7 @@ contract WarrantCanary is Ownable, Pausable {
 
     // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
     function createWarrantCanary(
-        uint expirationBlock_,
+        uint expirationTime_,
         string memory purpose_,
         address payable trustedThirdParty_
     )
@@ -72,7 +72,7 @@ contract WarrantCanary is Ownable, Pausable {
         warrantCanaries[IDcount] = warrantCanary(
         {
             ID : IDcount,
-            expirationBlock: expirationBlock_,
+            expirationTime: expirationTime_,
             lastUpdatedInBlock: block.number,
             purpose: purpose_,
             warrantCanaryOwner: payable(msg.sender),
@@ -92,14 +92,14 @@ contract WarrantCanary is Ownable, Pausable {
 
     }
 
-    function updateExpiration(uint warrantCanaryID_, uint newExpirationBlock_)
+    function updateExpiration(uint warrantCanaryID_, uint newExpirationTime_)
         public
         onlyCanaryOwner(warrantCanaryID_)
     {
-        uint oldExpirationBlock = warrantCanaries[warrantCanaryID_].expirationBlock;
-        warrantCanaries[warrantCanaryID_].expirationBlock = newExpirationBlock_;
+        uint oldExpirationTime = warrantCanaries[warrantCanaryID_].expirationTime;
+        warrantCanaries[warrantCanaryID_].expirationTime= newExpirationTime_;
         updateLastUpdatedInBlock(warrantCanaryID_);
-        emit LogExpirationUpdated(warrantCanaryID_, oldExpirationBlock, newExpirationBlock_);
+        emit LogExpirationUpdated(warrantCanaryID_, oldExpirationTime, newExpirationTime_);
     }
 
     function addFunds(uint warrantCanaryID_)
