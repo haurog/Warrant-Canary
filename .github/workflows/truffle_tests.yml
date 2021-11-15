@@ -32,6 +32,9 @@ jobs:
     - name: Install Truffle Dependencies
       run: npm install
 
+    - name: Install Ganache
+      run: npm install ganache-cli -g
+
     - name: Run Truffle Test
       run: ganache-cli | truffle test
 
