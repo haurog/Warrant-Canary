@@ -112,7 +112,13 @@ contract("WarrantCanary", function (accounts) {
   it("Testing Pausable library", async () => {
     await instance.changeTrustedThirdParty(0, accounts[1]);
 
-    instance.togglePauseState();
+    await truffleAssert.reverts(
+      instance.pauseContract({ from: accounts[1] }),
+      truffleAssert.ErrorType.REVERT,
+      "Only owner should be able to pause the contract"
+    );
+
+    instance.pauseContract();
 
     await truffleAssert.reverts(
       instance.createWarrantCanary(expirationBlock, purpose, '0x0000000000000000000000000000000000000000'),
@@ -132,17 +138,19 @@ contract("WarrantCanary", function (accounts) {
     );
 
     await truffleAssert.reverts(
-      instance.togglePauseState({ from: accounts[1] }),
+      instance.unpauseContract({ from: accounts[1] }),
       truffleAssert.ErrorType.REVERT,
-      "Only owner should be able to toggle the pause state of the contract"
+      "Only owner should be able unpause the contract"
     );
 
-    instance.togglePauseState();
+    instance.unpauseContract();
 
     await truffleAssert.passes(
       instance.addFunds(0, { value: fundsAdded }),
       "Contract is unpaused again, so adding funds should be possible"
     );
+
+
 
     await instance.withdrawAllFunds(0);
   });
