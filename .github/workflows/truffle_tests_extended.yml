@@ -37,8 +37,8 @@ jobs:
         ganache-cli &
         CI=true truffle test
 
-    - name: Run Codechecks
-      run: npx codechecks
+    # - name: Run Codechecks
+    #   run: npx codechecks
 
     - name: Run Test Coverage
       run: truffle run coverage
