@@ -132,7 +132,8 @@ contract WarrantCanary is Ownable, Pausable {
     {
         require(warrantCanaries[warrantCanaryID_].enclosedFunds >= fundsToWithdraw_);
         warrantCanaries[warrantCanaryID_].enclosedFunds -= fundsToWithdraw_;
-        payable(msg.sender).transfer(fundsToWithdraw_);
+        (bool sent, ) = msg.sender.call{value: fundsToWithdraw_}("");
+        require(sent, "Failed to send Ether");
         emit LogFundsWithdrawn(warrantCanaryID_, fundsToWithdraw_);
     }
 
@@ -149,7 +150,7 @@ contract WarrantCanary is Ownable, Pausable {
         onlyCanaryOwnerOrTrustedThirdParty(warrantCanaryID_) {
         // deletes the warrant canary from the mapping (only possible if enclosedFunds = 0)
         require(warrantCanaries[warrantCanaryID_].enclosedFunds == 0,
-        "The warrant Canary is not empty and can not be deleted.");
+        "The warrant Canary still has funds and can not be deleted.");
 
         address wcOwner = warrantCanaries[warrantCanaryID_].warrantCanaryOwner;
         address wcTrusted = warrantCanaries[warrantCanaryID_].trustedThirdParty;
@@ -224,6 +225,8 @@ contract WarrantCanary is Ownable, Pausable {
         {
             allEnclosedFunds += warrantCanaries[i].enclosedFunds;
         }
-        payable(msg.sender).transfer(address(this).balance - allEnclosedFunds);
+        uint withdrawAmount = address(this).balance - allEnclosedFunds;
+        (bool sent, ) = msg.sender.call{value: withdrawAmount}("");
+        require(sent, "Failed to send Ether");
     }
 }
