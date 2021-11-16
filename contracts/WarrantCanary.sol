@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 /// @title Warrant Canary with enclosed funds
 /// @author haurog
 /// @notice  A warrant canary contract implementation which allows enclosed funds (ETH only) to be withdrawn by a third party upon expiration
-/// @dev
 
 contract WarrantCanary is Ownable, Pausable {
 
@@ -57,7 +56,10 @@ contract WarrantCanary is Ownable, Pausable {
         _;
     }
 
-    // Create a new Warrant Canary with trusted thirdParty (can be set to 0x0)
+    /// @notice Creates a new Warrant Canary with trusted thirdParty (can be set to 0x0)
+    /// @param expirationTime_: The time (unix epoch in seconds) when the warrant canary expires
+    /// @param purpose_: A string describing the purpose of the warrant canary
+    /// @param trustedThirdParty_: An address of a trusted third party. Can be 0x0 if a plain warrant canary should be used.
     function createWarrantCanary(
         uint expirationTime_,
         string memory purpose_,
@@ -91,6 +93,9 @@ contract WarrantCanary is Ownable, Pausable {
 
     }
 
+    /// @notice Update the expiration time for an owned warrant canary contract
+    /// @param warrantCanaryID_: ID (uint) of the warrant canary whose expiration time should be changed
+    /// @param newExpirationTime_: The time (unix epoch in seconds) when the warrant canary expires
     function updateExpiration(uint warrantCanaryID_, uint newExpirationTime_)
         public
         onlyCanaryOwner(warrantCanaryID_)
@@ -101,6 +106,8 @@ contract WarrantCanary is Ownable, Pausable {
         emit LogExpirationUpdated(warrantCanaryID_, oldExpirationTime, newExpirationTime_);
     }
 
+    /// @notice Add funds to a warrant canary (ETH only)
+    /// @param warrantCanaryID_: ID (uint) of the warrant canary to which the funds are added
     function addFunds(uint warrantCanaryID_)
     public
     payable
@@ -111,6 +118,8 @@ contract WarrantCanary is Ownable, Pausable {
         emit LogFundsAdded(warrantCanaryID_, msg.value);
     }
 
+    /// @notice Change the address of the trusted third party
+    /// @param warrantCanaryID_: ID (uint) of the warrant canary whose trusted third party should be changed
     function changeTrustedThirdParty(
         uint warrantCanaryID_,
         address payable newTrustedThirdParty_
