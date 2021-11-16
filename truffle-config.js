@@ -31,13 +31,6 @@ module.exports = {
             port: 8545,
             network_id: '*'
         },
-
-        developmentOnGithub: {
-          host: 'localhost',
-          port: 9545,
-          network_id: '*'
-        },
-
         rinkeby: {
           provider: () => new HDWalletProvider(process.env.MNEMONIC, infuraURL),
           network_id: 4,          // Rinkeby's network id
