@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 
 contract WarrantCanary is Ownable, Pausable {
 
-    address adminOwner;
     uint public IDcount;
     struct warrantCanary {
         uint ID;
