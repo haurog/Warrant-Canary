@@ -1,6 +1,6 @@
 # Final Project: A warrant canary with enclosed funds
 
-The idea of this project is to build a warrant canary contract, which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp (blocknumber) in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet. 
+The idea of this project is to build a warrant canary contract, which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp (blocknumber) in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet.
 
 A **user** can do several different interactions:
 
@@ -22,4 +22,57 @@ The **general audience** can check if the warrant canary has expired and therefo
 The **owner** of the contract can:
 * Pause the contract so no new warrant canaries can be created and no funds can be added to existing ones. Withdrawing and updating expiration is still possible.
 * Withdraw excess funds, meaning funds that are not associated with a warrant canary.
-* Withdraw ERC-20 tokens which have been sent to the address accidentally. 
+* Withdraw ERC-20 tokens which have been sent to the address accidentally.
+
+
+### Deployment
+
+To rinkeby:
+'''
+truffle migrate --reset --network rinkeby
+'''
+
+Verify:
+'''
+truffle run verify WarrantCanary --network rinkeby
+'''
+
+
+### Gas optimizations with compiler optimizations disabled/enabled
+'''
+·---------------------------------------------|----------------------------|-------------| |---------------------------|--------------|
+|     Solc version: 0.8.9+commit.e5eed63a     ·  Optimizer enabled: false  ·  Runs: 200  · ·  Optimizer enabled: true  ·  Runs: 1500  ·
+··············································|····························|·············| |···························|··············|
+|  Methods
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  Contract       ·  Method                   ·  Min         ·  Max        ·  Avg        · ·  Min        ·  Max        ·  Avg         ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  addFunds                 ·       46153  ·      46165  ·      46155  · ·      45490  ·      45502  ·       45492  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  changeTrustedThirdParty  ·       25648  ·      74309  ·      65147  · ·      24629  ·      72397  ·       63282  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  createWarrantCanary      ·      159181  ·     248012  ·     192104  · ·     156868  ·     245664  ·      189776  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  deleteWarrantCanary      ·       58554  ·      59873  ·      58994  · ·      57677  ·      59131  ·       58162  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  pauseContract            ·           -  ·          -  ·      30327  · ·          -  ·          -  ·       29880  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  renounceOwnership        ·           -  ·          -  ·      15549  · ·          -  ·          -  ·       14778  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  retrieveExcessFunds      ·           -  ·          -  ·      41300  · ·          -  ·          -  ·       39865  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  transferOwnership        ·           -  ·          -  ·      31265  · ·          -  ·          -  ·       30111  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  unpauseContract          ·           -  ·          -  ·      30412  · ·          -  ·          -  ·       29905  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  updateExpiration         ·       35979  ·      36003  ·      35991  · ·      35098  ·      35122  ·       35110  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  withdrawAllFunds         ·       27740  ·      31840  ·      28791  · ·      26825  ·      30925  ·       27856  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary  ·  withdrawSomeFunds        ·           -  ·          -  ·      40263  · ·          -  ·          -  ·       39287  ·
+··················|···························|··············|·············|·············| |·············|·············|··············|
+|  Deployments                                ·                                          · ·                                          ·
+··············································|··············|·············|·············| |·············|·············|··············|
+|  WarrantCanary                              ·           -  ·          -  ·    2896460  · ·          -  ·          -  ·     1797814  ·
+·---------------------------------------------|--------------|-------------|-------------| |-------------|-------------|--------------|
+'''
