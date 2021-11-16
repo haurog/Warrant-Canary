@@ -40,10 +40,10 @@ contract WarrantCanary is Ownable, Pausable {
     modifier onlyCanaryOwnerOrTrustedThirdParty(uint warrantCanaryID) {
         require(msg.sender == warrantCanaries[warrantCanaryID].warrantCanaryOwner ||
                 msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty,
-                "You are neither the owner or trusted third party of this warrant canary");
+                "You are neither the owner or trusted third party of this warrant canary.");
         if (msg.sender == warrantCanaries[warrantCanaryID].trustedThirdParty) {
             require(block.timestamp >= warrantCanaries[warrantCanaryID].expirationTime,
-                "Warrant canary has not expired yet");
+                "Warrant canary has not expired yet.");
         }
         _;
     }
@@ -128,6 +128,10 @@ contract WarrantCanary is Ownable, Pausable {
         onlyCanaryOwner(warrantCanaryID_)
 
     {
+        if (newTrustedThirdParty_ == address(0)) {
+            require(warrantCanaries[warrantCanaryID_].enclosedFunds == 0,
+            "Trusted third party can only be set to 0x0 if there are no funds enclosed.");
+        }
         address oldTrustedThirdParty = warrantCanaries[warrantCanaryID_].trustedThirdParty;
         warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
         updateLastUpdatedInBlock(warrantCanaryID_);
@@ -141,7 +145,7 @@ contract WarrantCanary is Ownable, Pausable {
         require(warrantCanaries[warrantCanaryID_].enclosedFunds >= fundsToWithdraw_);
         warrantCanaries[warrantCanaryID_].enclosedFunds -= fundsToWithdraw_;
         (bool sent, ) = msg.sender.call{value: fundsToWithdraw_}("");
-        require(sent, "Failed to send Ether");
+        require(sent, "Failed to send funds.");
         emit LogFundsWithdrawn(warrantCanaryID_, fundsToWithdraw_);
     }
 
@@ -235,6 +239,6 @@ contract WarrantCanary is Ownable, Pausable {
         }
         uint withdrawAmount = address(this).balance - allEnclosedFunds;
         (bool sent, ) = msg.sender.call{value: withdrawAmount}("");
-        require(sent, "Failed to send Ether");
+        require(sent, "Failed to send Ether.");
     }
 }
