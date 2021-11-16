@@ -1,5 +1,6 @@
-const WarrantCanary = artifacts.require('./WarrantCanary.sol');
-
-module.exports = function(deployer) {
-    deployer.deploy(WarrantCanary);
+module.exports = async function(deployer) {
+    const WarrantCanary = artifacts.require('./WarrantCanary.sol');
+    await deployer.deploy(WarrantCanary);
+    const contract = await WarrantCanary.deployed();
+    console.log("Contract address:", contract.address)
 };
