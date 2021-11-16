@@ -28,18 +28,18 @@ The **owner** of the contract can:
 ### Deployment
 
 To rinkeby:
-'''
+```
 truffle migrate --reset --network rinkeby
-'''
+```
 
 Verify:
-'''
+```
 truffle run verify WarrantCanary --network rinkeby
-'''
+```
 
 
 ### Gas optimizations with compiler optimizations disabled/enabled
-'''
+```
 ·---------------------------|----------------------------|-------------| |---------------------------|--------------|
 |  Solc version: 0.8.9      ·  Optimizer enabled: false  ·  Runs: 200  · ·  Optimizer enabled: true  ·  Runs: 1500  ·
 ····························|····························|·············| |···························|··············|
@@ -75,4 +75,4 @@ truffle run verify WarrantCanary --network rinkeby
 ····························|··············|·············|·············| |·············|·············|··············|
 |  WarrantCanary            ·           -  ·          -  ·    2896460  · ·          -  ·          -  ·     1797814  ·
 ·---------------------------|--------------|-------------|-------------| |-------------|-------------|--------------|
-'''
+```
