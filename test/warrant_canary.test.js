@@ -243,6 +243,29 @@ contract("WarrantCanary", function (accounts) {
       instance.changeTrustedThirdParty(0, zeroAddress),
       "Setting the trusted third party to 0x0. should be possible as there are no funds enclosed. "
     );
+
+
+    // Test that changing trusted third party properly updates the IDsTrusted mappings
+    let idToChange = 1;
+    await instance.createWarrantCanary(expirationTime, purpose, accounts[3]);
+
+    IDsTrusted = await instance.getIDsTrusted(accounts[3]);
+    convertArrayToSmallNumber(IDsTrusted);
+    // console.log("before: " + IDsTrusted);
+    assert(IDsTrusted.indexOf(idToChange) !== -1, "ID not in trusted warrant canary IDs.");
+
+    await instance.changeTrustedThirdParty(idToChange, accounts[4])
+
+    IDsTrusted = await instance.getIDsTrusted(accounts[3]);
+    convertArrayToSmallNumber(IDsTrusted);
+    // console.log("after old: " + IDsTrusted);
+    assert(IDsTrusted.indexOf(idToChange) === -1, "ID is still in trusted warrant canary IDs.");
+
+    IDsTrusted = await instance.getIDsTrusted(accounts[4]);
+    convertArrayToSmallNumber(IDsTrusted);
+    // console.log("after new: " + IDsTrusted);
+    assert(IDsTrusted.indexOf(idToChange) !== -1, "ID has not been added to trusted warrant canary IDs of the new address.");
+
   });
 
   it("Testing expiration block for third party access to funds.", async () => {

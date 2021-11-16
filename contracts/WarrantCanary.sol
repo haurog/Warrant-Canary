@@ -134,6 +134,12 @@ contract WarrantCanary is Ownable, Pausable {
         }
         address oldTrustedThirdParty = warrantCanaries[warrantCanaryID_].trustedThirdParty;
         warrantCanaries[warrantCanaryID_].trustedThirdParty = newTrustedThirdParty_;
+        if (oldTrustedThirdParty != address(0)) {
+            IDsTrusted[oldTrustedThirdParty] = removeByValue(IDsTrusted[oldTrustedThirdParty], warrantCanaryID_);
+        }
+        if (newTrustedThirdParty_ != address(0)) {
+            IDsTrusted[newTrustedThirdParty_].push(warrantCanaryID_);
+        }
         updateLastUpdatedInBlock(warrantCanaryID_);
         emit LogChangedTrustedThirdParty(warrantCanaryID_, oldTrustedThirdParty, newTrustedThirdParty_);
     }
