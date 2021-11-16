@@ -25,6 +25,11 @@ The **owner** of the contract can:
 * Withdraw ERC-20 tokens which have been sent to the address accidentally.
 
 
+### Deployed Address
+```
+0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1
+```
+
 ### Deployment
 
 To rinkeby:
