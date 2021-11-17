@@ -26,9 +26,11 @@ The **owner** of the contract can:
 
 
 ### Deployed Address
-```
-0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1
-```
+
+The contract is on rinkeby under:
+
+[0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1](https://rinkeby.etherscan.io/address/0xf06c47b7feb65af49ddd78c1816bd4f31c2d56f1#code)
+
 
 ### Deployment
 
