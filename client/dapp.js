@@ -595,21 +595,11 @@ mmEnable.onclick = async () => {
 const createButton = document.getElementById('create-button');
 
 createButton.onclick = async () => {
-  // grab value from input
-
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
-  console.log(createExpirationInput);
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
-  console.log(createPurposeInput);
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
-  console.log(createtrustedThirdPartyInput);
-
-  console.log(createExpirationInput, createPurposeInput)
 
   var web3 = new Web3(window.ethereum)
-
-  // instantiate smart contract instance
-
   const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
   WarrantCanary.setProvider(window.ethereum)
 
@@ -618,25 +608,29 @@ createButton.onclick = async () => {
     createPurposeInput,
     createtrustedThirdPartyInput
     ).send({from: ethereum.selectedAddress})
-
 }
 
-const getExpirationButton = document.getElementById('getExpiration-button')
+const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button')
 
-getExpirationButton.onclick = async () => {
-
+getWarrantCanaryButton.onclick = async () => {
   var web3 = new Web3(window.ethereum)
-
   const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
   WarrantCanary.setProvider(window.ethereum)
 
-  const expirationInput = document.getElementById('getExpiration-button-ID-input').value;
+  const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
   var stateofWC = await WarrantCanary.methods.warrantCanaries(expirationInput).call()
   console.log(stateofWC)
 
-  const displayValue = document.getElementById('getExpiration-display-value')
+  const displayValue = document.getElementById('getWarrantCanary-display-value')
 
-  displayValue.innerHTML = 'Expiration Time: ' + stateofWC.expirationTime
+  displayValue.innerHTML = (
+    `<div> Warrant Canary ID: ${expirationInput} </div>
+    <div> Expiration time: ${stateofWC.expirationTime} </div>
+    <div> Last updated in block: ${stateofWC.lastUpdatedInBlock} </div>
+    <div> Purpose: ${stateofWC.purpose} </div>
+    <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
+    <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
+    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>`)
 
 }
 
