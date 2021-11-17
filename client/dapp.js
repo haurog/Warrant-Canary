@@ -4,7 +4,7 @@
 
 // contract address on Ropsten:
 // const ssAddress = '0x295eb38E3660d440B1dd54822644E545635f44E1'
-const wcAddress = '0xd104E11d5663cca951e023b7873689641e24dc96'
+const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1'
 
 // add contract ABI from Remix:
 
@@ -74,6 +74,19 @@ const wcABI =
         "internalType": "uint256",
         "name": "warrantCanaryID",
         "type": "uint256"
+      }
+    ],
+    "name": "LogDeleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "warrantCanaryID",
+        "type": "uint256"
       },
       {
         "indexed": false,
@@ -130,6 +143,51 @@ const wcABI =
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "IDcount",
     "outputs": [
@@ -140,7 +198,8 @@ const wcABI =
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -164,7 +223,8 @@ const wcABI =
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -188,6 +248,55 @@ const wcABI =
       }
     ],
     "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -207,7 +316,7 @@ const wcABI =
       },
       {
         "internalType": "uint256",
-        "name": "expirationBlock",
+        "name": "expirationTime",
         "type": "uint256"
       },
       {
@@ -237,13 +346,14 @@ const wcABI =
       }
     ],
     "stateMutability": "view",
-    "type": "function"
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "expirationBlock_",
+        "name": "expirationTime_",
         "type": "uint256"
       },
       {
@@ -260,25 +370,8 @@ const wcABI =
     "name": "createWarrantCanary",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "expirationBlock_",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "purpose_",
-        "type": "string"
-      }
-    ],
-    "name": "createWarrantCanarySimple",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
@@ -289,7 +382,7 @@ const wcABI =
       },
       {
         "internalType": "uint256",
-        "name": "newExpirationBlock_",
+        "name": "newExpirationTime_",
         "type": "uint256"
       }
     ],
@@ -309,7 +402,8 @@ const wcABI =
     "name": "addFunds",
     "outputs": [],
     "stateMutability": "payable",
-    "type": "function"
+    "type": "function",
+    "payable": true
   },
   {
     "inputs": [
@@ -376,12 +470,60 @@ const wcABI =
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "warrantCanaryID_",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "wcOwner",
+        "type": "address"
       }
     ],
-    "name": "Expiration",
+    "name": "getIDsOwned",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "wcTrusted",
+        "type": "address"
+      }
+    ],
+    "name": "getIDsTrusted",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "pauseContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpauseContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "retrieveExcessFunds",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -471,9 +613,10 @@ createButton.onclick = async () => {
   const warrantCanary = new web3.eth.Contract(wcABI, wcAddress)
   warrantCanary.setProvider(window.ethereum)
 
-  await warrantCanary.methods.createWarrantCanarySimple(
+  await warrantCanary.methods.createWarrantCanary(
     createExpirationInput,
-    createPurposeInput
+    createPurposeInput,
+    createtrustedThirdPartyInput
     ).send({from: ethereum.selectedAddress})
 
 }
