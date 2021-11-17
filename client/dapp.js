@@ -530,9 +530,9 @@ const wcABI =
   }
 ];
 
-let response = await fetch("./../build/contracts/WarrantCanary.json");
+// let response = await fetch("./../build/contracts/WarrantCanary.json");
 
-console.log(response.json());
+// console.log(response.json());
 
 // const wc = JSON.parse(fs.readFileSync('./build/contracts/WarrantCanary.json', 'utf8'));
 // console.log(JSON.stringify(contract.abi));
@@ -610,10 +610,10 @@ createButton.onclick = async () => {
 
   // instantiate smart contract instance
 
-  const warrantCanary = new web3.eth.Contract(wcABI, wcAddress)
-  warrantCanary.setProvider(window.ethereum)
+  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
+  WarrantCanary.setProvider(window.ethereum)
 
-  await warrantCanary.methods.createWarrantCanary(
+  await WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createtrustedThirdPartyInput
@@ -627,16 +627,16 @@ getExpirationButton.onclick = async () => {
 
   var web3 = new Web3(window.ethereum)
 
-  const simpleStorage = new web3.eth.Contract(ssABI, ssAddress)
-  simpleStorage.setProvider(window.ethereum)
+  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
+  WarrantCanary.setProvider(window.ethereum)
 
-  var value = await simpleStorage.methods.retrieve().call()
+  const expirationInput = document.getElementById('getExpiration-button-ID-input').value;
+  var stateofWC = await WarrantCanary.methods.warrantCanaries(expirationInput).call()
+  console.log(stateofWC)
 
-  console.log(value)
+  const displayValue = document.getElementById('getExpiration-display-value')
 
-  const ssDisplayValue = document.getElementById('ss-display-value')
-
-  ssDisplayValue.innerHTML = 'Current Simple Storage Value: ' + value
+  displayValue.innerHTML = 'Expiration Time: ' + stateofWC.expirationTime
 
 }
 
