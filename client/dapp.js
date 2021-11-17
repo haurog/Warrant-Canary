@@ -540,57 +540,55 @@ const wcABI =
 // Using the 'load' event listener for Javascript to
 // check if window.ethereum is available
 
-window.addEventListener('load', function() {
+var web3 = new Web3(window.ethereum);
 
+
+async function checkNetworkInMetamask() {
+  let chainID = await ethereum.request({method: 'eth_chainId'});
+  if (chainID != '0x4'){
+    window.alert("This dapp only runs on rinkeby test network. Please approve the switch to the correct network");
+  }
+  console.log(`chain: ${chainID}`);
+  await ethereum.request({method: 'wallet_switchEthereumChain',
+                          params:[{chainId: '0x4'}]
+                        }).cache(e => window.location.reload());
+}
+
+function checkIfMetamaskIsAvailable() {
   if (typeof window.ethereum !== 'undefined') {
-    console.log('window.ethereum is enabled')
+    console.log('window.ethereum is enabled');
     if (window.ethereum.isMetaMask === true) {
-      console.log('MetaMask is active')
-      let mmDetected = document.getElementById('mm-detected')
-      mmDetected.innerHTML += 'MetaMask Is Available!'
-
-      // add in web3 here
-      var web3 = new Web3(window.ethereum)
-
+      console.log('MetaMask is active');
+      let mmDetected = document.getElementById('mm-detected');
+      mmDetected.innerHTML += 'MetaMask Is Available!';
     } else {
-      console.log('MetaMask is not available')
-      let mmDetected = document.getElementById('mm-detected')
-      mmDetected.innerHTML += 'MetaMask Not Available!'
-      // let node = document.createTextNode('<p>MetaMask Not Available!<p>')
-      // mmDetected.appendChild(node)
+      console.log('MetaMask is not available');
+      let mmDetected = document.getElementById('mm-detected');
+      mmDetected.innerHTML += 'MetaMask Not Available!';
     }
   } else {
-    console.log('window.ethereum is not found')
-    let mmDetected = document.getElementById('mm-detected')
-    mmDetected.innerHTML += '<p>MetaMask Not Available!<p>'
-    alert("you have no metamask installed")
+    console.log('window.ethereum is not found');
+    let mmDetected = document.getElementById('mm-detected');
+    mmDetected.innerHTML += '<p>MetaMask Not Available!<p>';
+    alert("you have no metamask installed");
   }
+}
+
+window.addEventListener('load', function() {
+  checkIfMetamaskIsAvailable();
 })
 
 
-var web3 = new Web3(window.ethereum)
 
-// Grabbing the button object,
 
 const mmEnable = document.getElementById('mm-connect');
 
-// since MetaMask has been detected, we know
-// `ethereum` is an object, so we'll do the canonical
-// MM request to connect the account.
-//
-// typically we only request access to MetaMask when we
-// need the user to do something, but this is just for
-// an example
-
 mmEnable.onclick = async () => {
-  await ethereum.request({ method: 'eth_requestAccounts'})
-  // grab mm-current-account
-  // and populate it with the current address
+  await ethereum.request({ method: 'eth_requestAccounts'});
   var mmCurrentAccount = document.getElementById('mm-current-account');
-  mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress
+  mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress;
+  await checkNetworkInMetamask();
 }
-
-// grab the button for input to a contract:
 
 const createButton = document.getElementById('create-button');
 
@@ -598,30 +596,27 @@ createButton.onclick = async () => {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
-
-  var web3 = new Web3(window.ethereum)
-  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
-  WarrantCanary.setProvider(window.ethereum)
+  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress);
+  WarrantCanary.setProvider(window.ethereum);
 
   await WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createtrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress})
+    ).send({from: ethereum.selectedAddress});
 }
 
-const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button')
+const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button');
 
 getWarrantCanaryButton.onclick = async () => {
-  var web3 = new Web3(window.ethereum)
-  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress)
-  WarrantCanary.setProvider(window.ethereum)
+  const WarrantCanary = new web3.eth.Contract(wcABI, wcAddress);
+  WarrantCanary.setProvider(window.ethereum);
 
   const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
-  var stateofWC = await WarrantCanary.methods.warrantCanaries(expirationInput).call()
+  var stateofWC = await WarrantCanary.methods.warrantCanaries(expirationInput).call();
   console.log(stateofWC)
 
-  const displayValue = document.getElementById('getWarrantCanary-display-value')
+  const displayValue = document.getElementById('getWarrantCanary-display-value');
 
   displayValue.innerHTML = (
     `<div> Warrant Canary ID: ${expirationInput} </div>
@@ -630,7 +625,6 @@ getWarrantCanaryButton.onclick = async () => {
     <div> Purpose: ${stateofWC.purpose} </div>
     <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
     <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
-    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>`)
-
+    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>`);
 }
 
