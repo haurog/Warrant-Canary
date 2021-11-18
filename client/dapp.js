@@ -72,16 +72,16 @@ createButton.onclick = async () => {
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
 
-  await WarrantCanary.methods.createWarrantCanary(
+  await window.WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createtrustedThirdPartyInput
     ).send({from: ethereum.selectedAddress});
 }
 
-async function getAWarrantCanary(ID, displayValue) {
+async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
-  // const displayValue = document.getElementById('getWarrantCanary-display-value');
+  const displayValue = document.getElementById(location);
   displayValue.innerHTML += (
     `<div> Warrant Canary ID: ${ID} </div>
     <div> Expiration time: ${stateofWC.expirationTime} </div>
@@ -89,21 +89,23 @@ async function getAWarrantCanary(ID, displayValue) {
     <div> Purpose: ${stateofWC.purpose} </div>
     <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
     <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
-    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>`);
+    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>
+    <button onclick="getAWarrantCanary(${ID}, 'getWarrantCanary-display-value')">Get this Warrant Canary</button>`
+    );
 }
 
 const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button');
 getWarrantCanaryButton.onclick = async () => {
   const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
   const displayValue = document.getElementById('getWarrantCanary-display-value');
-  getAWarrantCanary(expirationInput, displayValue);
+  displayValue.innerHTML ="";
+  getAWarrantCanary(expirationInput, 'getWarrantCanary-display-value');
 }
 
-const getAllAssociatedWarrantCanariesButton = document.getElementById('getAllAssociatedWarrantCanaries-button');
-getAllAssociatedWarrantCanariesButton.onclick = async () => {
-  // getAWarrantCanary(expirationInput);
-  getAllAssociatedWarrantCanaries();
-}
+// const getAllAssociatedWarrantCanariesButton = document.getElementById('getAllAssociatedWarrantCanaries-button');
+// getAllAssociatedWarrantCanariesButton.onclick = async () => {
+//   getAllAssociatedWarrantCanaries();
+// }
 
 async function getAllAssociatedWarrantCanaries() {
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
@@ -111,8 +113,8 @@ async function getAllAssociatedWarrantCanaries() {
   const displayLocation = document.getElementById('getAllAssociatedWarrantCanaries-display-value');
   displayLocation.innerHTML = "";
 
-  IDsOwned.forEach(function(element) {getAWarrantCanary(element, displayLocation)});
-  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, displayLocation)});
+  IDsOwned.forEach(function(element) {getAWarrantCanary(element, 'getAllAssociatedWarrantCanaries-display-value')});
+  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, 'getAllAssociatedWarrantCanaries-display-value')});
 }
 
 
