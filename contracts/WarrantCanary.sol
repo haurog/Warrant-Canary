@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 
 /// @title Warrant Canary with enclosed funds
 /// @author haurog
-/// @notice  A warrant canary contract implementation which allows enclosed funds (ETH only) to be withdrawn by a third party upon expiration
+/// @notice A warrant canary contract implementation which allows enclosed funds (ETH only) to be withdrawn by a third party upon expiration
 
 contract WarrantCanary is Ownable, Pausable {
 
