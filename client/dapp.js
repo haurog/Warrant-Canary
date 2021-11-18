@@ -1,18 +1,21 @@
 
-// import WarrantCanary from './../build/contracts/WarrantCanary.json'
-
-
-// contract address on Ropsten:
-// const ssAddress = '0x295eb38E3660d440B1dd54822644E545635f44E1'
+// contract address on Rinkeby:
 const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1'
 
-// add contract ABI from Remix:
 
-// fetch("./../build/contracts/WarrantCanary.json")
-// .then(response => {
-//    return response.json();
-// })
-// .then(data => console.log(data));
+// -----------------------------------------------------------------------
+// let jsonFile = "contractAbi.json";
+// let currentContractAddress="addressHere";
+
+// var json = await $.getJSON(jsonFile);
+
+//  let abi = json.abi;
+
+// const initialisedContract = new web3.eth.Contract(abi, currentContractAddress);
+
+//  initialisedContract.setProvider(App.web3Provider);
+// -----------------------------------------------------------------------
+
 
 const wcABI =
 [
