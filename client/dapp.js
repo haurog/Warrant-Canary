@@ -7,14 +7,9 @@ let WarrantCanary;
 
 window.addEventListener('load', function(event) {
   createContractObject();
-  console.log("Warrant Canary1: " + window.WarrantCanary);
   checkIfMetamaskIsAvailable();
-  console.log("Warrant Canary2: " + window.WarrantCanary);
   connectToMetamask();
-  console.log("Warrant Canary3: " + window.WarrantCanary);
   createContractObject();
-  console.log("Warrant Canary4: " + window.WarrantCanary);
-  // getAllAssociatedWarrantCanaries();
 })
 
 
@@ -26,7 +21,6 @@ async function createContractObject() {
 
   window.WarrantCanary = await new web3.eth.Contract(wcABI, wcAddress);
   await window.WarrantCanary.setProvider(window.ethereum);
-  console.log("Warrant Canary6: " + window.WarrantCanary);
 }
 
 async function checkNetworkInMetamask() {
@@ -34,7 +28,6 @@ async function checkNetworkInMetamask() {
   if (chainID != '0x4'){
     window.alert("This dapp only runs on rinkeby test network. Please approve the switch to the correct network");
   }
-  console.log(`chain: ${chainID}`);
   await ethereum.request({method: 'wallet_switchEthereumChain',
                           params:[{chainId: '0x4'}]
                         });
@@ -65,7 +58,6 @@ async function connectToMetamask() {
   var mmCurrentAccount = document.getElementById('mm-current-account');
   mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress;
   window.userAddress = ethereum.selectedAddress;
-  console.log("userAddress: " + window.userAddress);
   await checkNetworkInMetamask();
 }
 
@@ -87,11 +79,11 @@ createButton.onclick = async () => {
     ).send({from: ethereum.selectedAddress});
 }
 
-async function getAWarrantCanary(ID_) {
-  var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID_).call();
-  const displayValue = document.getElementById('getWarrantCanary-display-value');
+async function getAWarrantCanary(ID, displayValue) {
+  var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  // const displayValue = document.getElementById('getWarrantCanary-display-value');
   displayValue.innerHTML += (
-    `<div> Warrant Canary ID: ${ID_} </div>
+    `<div> Warrant Canary ID: ${ID} </div>
     <div> Expiration time: ${stateofWC.expirationTime} </div>
     <div> Last updated in block: ${stateofWC.lastUpdatedInBlock} </div>
     <div> Purpose: ${stateofWC.purpose} </div>
@@ -103,23 +95,24 @@ async function getAWarrantCanary(ID_) {
 const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button');
 getWarrantCanaryButton.onclick = async () => {
   const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
+  const displayValue = document.getElementById('getWarrantCanary-display-value');
+  getAWarrantCanary(expirationInput, displayValue);
+}
+
+const getAllAssociatedWarrantCanariesButton = document.getElementById('getAllAssociatedWarrantCanaries-button');
+getAllAssociatedWarrantCanariesButton.onclick = async () => {
   // getAWarrantCanary(expirationInput);
   getAllAssociatedWarrantCanaries();
 }
 
 async function getAllAssociatedWarrantCanaries() {
-  console.log("WC 7: " + window.WarrantCanary + " " + window.userAddress);
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
-  console.log("IDsOwned: " + IDsOwned);
-  // convertArrayToSmallNumber(IDsOwned);
-
-  console.log(IDsOwned);
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
-  // convertArrayToSmallNumber(IDsTrusted);
-  console.log("IDsTrusted: " + IDsTrusted);
-  console.log(IDsTrusted);
-  for (const ID of IDsOwned) {getAWarrantCanary(ID);}
-  for (const ID of IDsTrusted) {getAWarrantCanary(ID);}
+  const displayLocation = document.getElementById('getAllAssociatedWarrantCanaries-display-value');
+  displayLocation.innerHTML = "";
+
+  IDsOwned.forEach(function(element) {getAWarrantCanary(element, displayLocation)});
+  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, displayLocation)});
 }
 
 
