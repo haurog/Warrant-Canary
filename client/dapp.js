@@ -90,7 +90,25 @@ async function getAWarrantCanary(ID, location) {
     <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
     <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
     <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>
-    <button onclick="getAWarrantCanary(${ID}, 'getWarrantCanary-display-value')">Get this Warrant Canary</button>`
+    <div>
+      <button id="updateExpiration-button">Update Expiration</button>
+      <input id="updateExpiration-button-expiration-input" type="number" placeholder="Expiration Block"/>
+    </div>
+    <div>
+      <button id="addFunds-button">Add Funds</button>
+      <input id="addFunds-button-funds-input" type="number" placeholder="Funds in ETH"/>
+    </div>
+    <div>
+      <button id="changeThirdParty-button">Change Trusted Third Party</button>
+      <input id="changeThirdParty-button-thirdParty-input" type="string" placeholder="Address of the New Third Party"/>
+    </div>
+    <div>
+      <button id="withdrawSome-button">Withdraw Some Funds</button>
+      <input id="withdrawSome-button-funds-input" type="number" placeholder="Funds to Withdraw in ETH"/>
+    </div>
+    <div>
+      <button id="withdrawAll-button">Withdraw Some Funds</button>
+    </div>`
     );
 }
 
