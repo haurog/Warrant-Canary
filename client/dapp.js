@@ -93,6 +93,15 @@ async function addFunds(ID) {
     ).send({from: ethereum.selectedAddress, value: fundsToAdd});
 }
 
+async function changeTrustedThirdParty(ID) {
+  const newTrustedThirdParty = document.getElementById(`change-trusted-third-party-input-${ID}`).value;
+  console.log(newTrustedThirdParty);
+  await window.WarrantCanary.methods.changeTrustedThirdParty(
+    ID,
+    newTrustedThirdParty
+    ).send({from: ethereum.selectedAddress});
+}
+
 async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
@@ -113,8 +122,8 @@ async function getAWarrantCanary(ID, location) {
       <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
     </div>
     <div>
-      <button id="changeThirdParty-button">Change Trusted Third Party</button>
-      <input id="changeThirdParty-button-thirdParty-input" type="string" placeholder="Address of the New Third Party"/>
+      <button onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
+      <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address of the New Third Party"/>
     </div>
     <div>
       <button id="withdrawSome-button">Withdraw Some Funds</button>
