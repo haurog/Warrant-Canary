@@ -100,7 +100,7 @@ async function getAWarrantCanary(ID, location) {
     <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>
     <div>
       <button onclick="updateExpiration(${ID})" >Update Expiration</button>
-      <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Block"/>
+      <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Time"/>
     </div>
     <div>
       <button id="addFunds-button">Add Funds</button>
