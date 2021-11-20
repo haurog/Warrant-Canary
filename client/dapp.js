@@ -66,8 +66,8 @@ mmEnable.onclick = async () => {
   connectToMetamask();
 }
 
-const createButton = document.getElementById('create-button');
-createButton.onclick = async () => {
+// const createButton = document.getElementById('create-button');
+async function createWarrantCanary(ID, location) {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
