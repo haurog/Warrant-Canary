@@ -80,11 +80,17 @@ async function createWarrantCanary() {
 
 async function updateExpiration(ID) {
   const newExpirationTime = document.getElementById(`update-expiration-input-${ID}`).value;
-
   await window.WarrantCanary.methods.updateExpiration(
     ID,
     newExpirationTime
     ).send({from: ethereum.selectedAddress});
+}
+
+async function addFunds(ID) {
+  const fundsToAdd = document.getElementById(`add-funds-input-${ID}`).value;
+  await window.WarrantCanary.methods.addFunds(
+    ID
+    ).send({from: ethereum.selectedAddress, value: fundsToAdd});
 }
 
 async function getAWarrantCanary(ID, location) {
@@ -103,8 +109,8 @@ async function getAWarrantCanary(ID, location) {
       <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Time"/>
     </div>
     <div>
-      <button id="addFunds-button">Add Funds</button>
-      <input id="addFunds-button-funds-input" type="number" placeholder="Funds in ETH"/>
+      <button onclick="addFunds(${ID})">Add Funds</button>
+      <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
     </div>
     <div>
       <button id="changeThirdParty-button">Change Trusted Third Party</button>
