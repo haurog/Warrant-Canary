@@ -66,8 +66,7 @@ mmEnable.onclick = async () => {
   connectToMetamask();
 }
 
-// const createButton = document.getElementById('create-button');
-async function createWarrantCanary(ID, location) {
+async function createWarrantCanary() {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
@@ -76,6 +75,15 @@ async function createWarrantCanary(ID, location) {
     createExpirationInput,
     createPurposeInput,
     createtrustedThirdPartyInput
+    ).send({from: ethereum.selectedAddress});
+}
+
+async function updateExpiration(ID) {
+  const newExpirationTime = document.getElementById(`update-expiration-input-${ID}`).value;
+
+  await window.WarrantCanary.methods.updateExpiration(
+    ID,
+    newExpirationTime
     ).send({from: ethereum.selectedAddress});
 }
 
@@ -91,8 +99,8 @@ async function getAWarrantCanary(ID, location) {
     <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
     <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>
     <div>
-      <button id="updateExpiration-button">Update Expiration</button>
-      <input id="updateExpiration-button-expiration-input" type="number" placeholder="Expiration Block"/>
+      <button onclick="updateExpiration(${ID})" >Update Expiration</button>
+      <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Block"/>
     </div>
     <div>
       <button id="addFunds-button">Add Funds</button>
