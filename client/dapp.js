@@ -70,12 +70,14 @@ async function createWarrantCanary() {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
   const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
+  const fundsToAddinETH = document.getElementById(`create-button-funds-input`).value;
+  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether')
 
   await window.WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createtrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress});
+    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
 }
 
 async function updateExpiration(ID) {
@@ -87,10 +89,12 @@ async function updateExpiration(ID) {
 }
 
 async function addFunds(ID) {
-  const fundsToAdd = document.getElementById(`add-funds-input-${ID}`).value;
+  const fundsToAddinETH = document.getElementById(`add-funds-input-${ID}`).value;
+  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether')
+  console.log("funds to add: " + fundsToAddinETH + "  " + fundsToAddinWei)
   await window.WarrantCanary.methods.addFunds(
     ID
-    ).send({from: ethereum.selectedAddress, value: fundsToAdd});
+    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
 }
 
 async function changeTrustedThirdParty(ID) {
