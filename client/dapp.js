@@ -90,8 +90,8 @@ async function updateExpiration(ID) {
 
 async function addFunds(ID) {
   const fundsToAddinETH = document.getElementById(`add-funds-input-${ID}`).value;
-  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether')
-  console.log("funds to add: " + fundsToAddinETH + "  " + fundsToAddinWei)
+  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether');
+  // console.log("funds to add: " + fundsToAddinETH + "  " + fundsToAddinWei)
   await window.WarrantCanary.methods.addFunds(
     ID
     ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
@@ -99,12 +99,28 @@ async function addFunds(ID) {
 
 async function changeTrustedThirdParty(ID) {
   const newTrustedThirdParty = document.getElementById(`change-trusted-third-party-input-${ID}`).value;
-  console.log(newTrustedThirdParty);
+  // console.log(newTrustedThirdParty);
   await window.WarrantCanary.methods.changeTrustedThirdParty(
     ID,
     newTrustedThirdParty
     ).send({from: ethereum.selectedAddress});
 }
+
+async function withdrawSomeFunds(ID) {
+  const fundsToWithdrawInETH = document.getElementById(`withdrawSome-button-funds-input-${ID}`).value;
+  const fundsToWithdrawInWei = web3.utils.toWei(fundsToWithdrawInETH, 'ether');
+  await window.WarrantCanary.methods.withdrawSomeFunds(
+    ID,
+    fundsToWithdrawInWei
+    ).send({from: ethereum.selectedAddress});
+}
+
+async function withdrawAllFunds(ID) {
+  await window.WarrantCanary.methods.withdrawAllFunds(
+    ID
+    ).send({from: ethereum.selectedAddress});
+}
+
 
 async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
@@ -130,11 +146,11 @@ async function getAWarrantCanary(ID, location) {
       <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address of the New Third Party"/>
     </div>
     <div>
-      <button id="withdrawSome-button">Withdraw Some Funds</button>
-      <input id="withdrawSome-button-funds-input" type="number" placeholder="Funds to Withdraw in ETH"/>
+      <button onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
+      <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="Funds to Withdraw in ETH"/>
     </div>
     <div>
-      <button id="withdrawAll-button">Withdraw Some Funds</button>
+      <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
     </div>`
     );
 }
