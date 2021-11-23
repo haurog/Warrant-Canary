@@ -126,13 +126,14 @@ async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
   displayValue.innerHTML += (
-    `<div> Warrant Canary ID: ${ID} </div>
-    <div> Expiration time: ${stateofWC.expirationTime} </div>
-    <div> Last updated in block: ${stateofWC.lastUpdatedInBlock} </div>
-    <div> Purpose: ${stateofWC.purpose} </div>
+    `<div id="warrant-canary-${ID}" class="warrant-canary col-md-3 float-left">
+    <div class="float-right"><h4>${ID}</h4></div>
+    <div class="purpose"> ${stateofWC.purpose} </div>
+    <div> Expiration: ${stateofWC.expirationTime} </div>
+    <div> Last updated: ${stateofWC.lastUpdatedInBlock} </div>
     <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
-    <div> Trusted third party: ${stateofWC.trustedThirdParty} </div>
-    <div> Enclosed Funds: ${stateofWC.enclosedFunds} </div>
+    <div> Third party: ${stateofWC.trustedThirdParty} </div>
+    <div> Funds: ${stateofWC.enclosedFunds} </div>
     <div>
       <button onclick="updateExpiration(${ID})" >Update Expiration</button>
       <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Time"/>
@@ -151,31 +152,32 @@ async function getAWarrantCanary(ID, location) {
     </div>
     <div>
       <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
-    </div>`
+    </div>
+    <br/>
+    </div> `
     );
 }
 
 const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button');
 getWarrantCanaryButton.onclick = async () => {
   const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
-  const displayValue = document.getElementById('getWarrantCanary-display-value');
+  const displayValue = document.getElementById('warrant-canaries');
   displayValue.innerHTML ="";
-  getAWarrantCanary(expirationInput, 'getWarrantCanary-display-value');
+  getAWarrantCanary(expirationInput, 'warrant-canaries');
 }
-
-// const getAllAssociatedWarrantCanariesButton = document.getElementById('getAllAssociatedWarrantCanaries-button');
-// getAllAssociatedWarrantCanariesButton.onclick = async () => {
-//   getAllAssociatedWarrantCanaries();
-// }
 
 async function getAllAssociatedWarrantCanaries() {
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
-  const displayLocation = document.getElementById('getAllAssociatedWarrantCanaries-display-value');
+  const displayLocation = document.getElementById('warrant-canaries');
   displayLocation.innerHTML = "";
+  displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
+                                <div id="owned-warrant-canaries" class="row"></div>`;
 
-  IDsOwned.forEach(function(element) {getAWarrantCanary(element, 'getAllAssociatedWarrantCanaries-display-value')});
-  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, 'getAllAssociatedWarrantCanaries-display-value')});
+  IDsOwned.forEach(function(element) {getAWarrantCanary(element, 'owned-warrant-canaries')});
+  displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
+  <div id="trusted-warrant-canaries" class="row"></div>`;
+  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, 'trusted-warrant-canaries')});
 }
 
 
