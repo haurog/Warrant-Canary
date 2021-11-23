@@ -199,7 +199,7 @@ async function getAllAssociatedWarrantCanaries() {
     IDsOwned.forEach(function (element) {displayAWarrantCanary(element, 'owned-warrant-canaries') });
   }
   if (IDsTrusted.length > 0) {
-    displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
+    displayLocation.innerHTML += `<div><h2> As a Trusted Third Party</h2><div>
                                   <div id="trusted-warrant-canaries" class="row"></div>`;
     IDsTrusted.forEach(function (element) {displayAWarrantCanary(element, 'trusted-warrant-canaries') });
   }
