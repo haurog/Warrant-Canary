@@ -121,7 +121,7 @@ async function withdrawAllFunds(ID) {
     ).send({from: ethereum.selectedAddress});
 }
 
-
+// This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID, interactionRights,  location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
@@ -171,12 +171,16 @@ async function displayAWarrantCanary(ID, interactionRights,  location) {
   displayValue.innerHTML += htmlElement;
 }
 
-const getWarrantCanaryButton = document.getElementById('getWarrantCanary-button');
-getWarrantCanaryButton.onclick = async () => {
-  const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
-  const displayValue = document.getElementById('warrant-canaries');
-  displayValue.innerHTML ="";
-  displayAWarrantCanary(expirationInput, "Anyone", 'warrant-canaries');
+async function getAllWarrantCanaries() {
+  let IDcount = await window.WarrantCanary.methods.IDcount.call().call();
+  console.log("IDcount: " + IDcount)
+  const displayLocation = document.getElementById('warrant-canaries');
+  displayLocation.innerHTML = "";
+  displayLocation.innerHTML += `<div><h2> All Warrant Canaries </h2><div>
+                                <div id="all-warrant-canaries" class="row"></div>`;
+  for(i=0; i < IDcount; i++) {
+    await displayAWarrantCanary(i, "Anyone", 'all-warrant-canaries');
+  }
 }
 
 async function getAllAssociatedWarrantCanaries() {
@@ -188,12 +192,12 @@ async function getAllAssociatedWarrantCanaries() {
     displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
                                   <div id="owned-warrant-canaries" class="row"></div>`;
 
-    IDsOwned.forEach(function (element) { displayAWarrantCanary(element,"Owner" , 'owned-warrant-canaries') });
+    IDsOwned.forEach(function (element) {displayAWarrantCanary(element,"Owner" , 'owned-warrant-canaries') });
   }
   if (IDsTrusted.length > 0) {
     displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
                                   <div id="trusted-warrant-canaries" class="row"></div>`;
-    IDsTrusted.forEach(function (element) { displayAWarrantCanary(element, "Trusted", 'trusted-warrant-canaries') });
+    IDsTrusted.forEach(function (element) {displayAWarrantCanary(element, "Trusted", 'trusted-warrant-canaries') });
   }
 }
 
