@@ -5,68 +5,55 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warrant Canary</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
 </head>
 <body>
-  <h1>Warrant Canary</h1>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <div class="navbar-brand">
+            <h1><img width="120"  src="images/Canary-logo.png" alt="Canary Logo"> Warrant Canary</h1>
+            <p></p>
+          </div>
 
-  <div id="mm-detected"></div>
-  <button id="mm-connect">Connect to MetaMask</button>
-  <div id="mm-current-account"></div>
-
-  <div>
-  <button id="create-button" onclick="createWarrantCanary()">Create Warrant Canary</button>
-  <input id="create-button-expiration-input" type="number" placeholder="Expiration Block"/>
-  <input id="create-button-purpose-input" type="string" placeholder="Purpose"/>
-  <input id="create-button-trustedThirdParty-input" type="string" placeholder="Address of the New Third Party"/>
-  <input id="create-button-funds-input" type="number" placeholder="Funds in ETH"/>
-  </div>
-  <!-- <div>
-    <button id="updateExpiration-button">Update Expiration</button>
-    <input id="updateExpiration-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-    <input id="updateExpiration-button-expiration-input" type="number" placeholder="Expiration Block"/>
-  </div>
-  <div>
-    <button id="addFunds-button">Add Funds</button>
-    <input id="addFunds-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-    <input id="addFunds-button-funds-input" type="number" placeholder="Funds in ETH"/>
-  </div>
-  <div>
-    <button id="changeThirdParty-button">Change Trusted Third Party</button>
-    <input id="changeThirdParty-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-    <input id="changeThirdParty-button-thirdParty-input" type="string" placeholder="Address of the New Third Party"/>
-  </div>
-  <div>
-    <button id="withdrawSome-button">Withdraw Some Funds</button>
-    <input id="withdrawSome-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-    <input id="withdrawSome-button-funds-input" type="number" placeholder="Funds to Withdraw in ETH"/>
-  </div>
-  <div>
-    <button id="withdrawAll-button">Withdraw Some Funds</button>
-    <input id="withdrawAll-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-  </div> -->
+          <div id="mm-detected"></div>
+          <button id="mm-connect">Connect to MetaMask</button>
+          <div id="mm-current-account"></div>
 
 
-  <!-- Read input from contract -->
-  <div>
-    <button id="getWarrantCanary-button">Get Warrant Canary</button>
-    <input id="getWarrantCanary-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
-  </div>
+          <div >
+            <button id="create-button" onclick="createWarrantCanary()">Create Warrant Canary</button>
+            <input id="create-button-expiration-input" type="number" placeholder="Expiration Block"/>
+            <input id="create-button-purpose-input" type="string" placeholder="Purpose"/>
+            <input id="create-button-trustedThirdParty-input" type="string" placeholder="Address of the New Third Party"/>
+            <input id="create-button-funds-input" type="number" placeholder="Funds in ETH"/>
+            </div>
+
+            <!-- Read input from contract -->
+            <div>
+              <button id="getWarrantCanary-button">Get Warrant Canary</button>
+              <input id="getWarrantCanary-button-ID-input" type="number" placeholder="Warrant Canary ID"/>
+            </div>
+            <div>
+              <button onclick="getAllAssociatedWarrantCanaries()">Get All Associated Warrant Canaries</button>
+            </div>
+        </div>
+
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
   <div id="getWarrantCanary-display-value"></div>
-
-  <div>
-    <button id="getAllAssociatedWarrantCanaries-button" onclick="getAllAssociatedWarrantCanaries()">Get All Associated Warrant Canaries</button>
-  </div>
   <div id="getAllAssociatedWarrantCanaries-display-value"></div>
 
 </body>
 
 
-<!-- Had trouble and had to move the script down! -->
 <script src="dapp.js" type="text/javascript"></script>
-<!-- <script src="dapp.js" type="module"></script> -->
-
-
 </html>

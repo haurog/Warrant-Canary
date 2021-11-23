@@ -38,8 +38,8 @@ function checkIfMetamaskIsAvailable() {
     console.log('window.ethereum is enabled');
     if (window.ethereum.isMetaMask === true) {
       console.log('MetaMask is active');
-      let mmDetected = document.getElementById('mm-detected');
-      mmDetected.innerHTML += 'MetaMask Is Available!';
+      // let mmDetected = document.getElementById('mm-detected');
+      // mmDetected.innerHTML += 'MetaMask Is Available!';
     } else {
       console.log('MetaMask is not available');
       let mmDetected = document.getElementById('mm-detected');
