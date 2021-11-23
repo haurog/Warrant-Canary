@@ -122,7 +122,7 @@ async function withdrawAllFunds(ID) {
 }
 
 
-async function getAWarrantCanary(ID, location) {
+async function displayAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
   let DateTime = new Date(stateofWC.expirationTime * 1000);
@@ -166,7 +166,7 @@ getWarrantCanaryButton.onclick = async () => {
   const expirationInput = document.getElementById('getWarrantCanary-button-ID-input').value;
   const displayValue = document.getElementById('warrant-canaries');
   displayValue.innerHTML ="";
-  getAWarrantCanary(expirationInput, 'warrant-canaries');
+  displayAWarrantCanary(expirationInput, 'warrant-canaries');
 }
 
 async function getAllAssociatedWarrantCanaries() {
@@ -178,12 +178,12 @@ async function getAllAssociatedWarrantCanaries() {
     displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
                                   <div id="owned-warrant-canaries" class="row"></div>`;
 
-    IDsOwned.forEach(function (element) { getAWarrantCanary(element, 'owned-warrant-canaries') });
+    IDsOwned.forEach(function (element) { displayAWarrantCanary(element, 'owned-warrant-canaries') });
   }
   if (IDsTrusted.length > 0) {
     displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
                                   <div id="trusted-warrant-canaries" class="row"></div>`;
-    IDsTrusted.forEach(function (element) { getAWarrantCanary(element, 'trusted-warrant-canaries') });
+    IDsTrusted.forEach(function (element) { displayAWarrantCanary(element, 'trusted-warrant-canaries') });
   }
 }
 
