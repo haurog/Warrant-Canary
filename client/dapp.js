@@ -126,7 +126,7 @@ async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
   displayValue.innerHTML += (
-    `<div id="warrant-canary-${ID}" class="warrant-canary col-md-3 float-left">
+    `<div id="warrant-canary-${ID}" class="warrant-canary col-lg-3 col-md-5 col-sm-12 col-xs-12  m-1 overflow-scroll">
     <div class="float-right"><h4>${ID}</h4></div>
     <div class="purpose"> ${stateofWC.purpose} </div>
     <div> Expiration: ${stateofWC.expirationTime} </div>

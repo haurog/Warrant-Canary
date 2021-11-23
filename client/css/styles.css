@@ -36,8 +36,10 @@ body {
   font-size: 0.8em;
   color: black;
   text-align: left;
-  margin: 15px;
+  /* margin: 10px; */
+
   background: rgb(220, 233, 220);
+  /* padding: 15px; */
 }
 
 .purpose {
