@@ -171,13 +171,17 @@ async function getAllAssociatedWarrantCanaries() {
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
   const displayLocation = document.getElementById('warrant-canaries');
   displayLocation.innerHTML = "";
-  displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
-                                <div id="owned-warrant-canaries" class="row"></div>`;
+  if (IDsOwned.length > 0) {
+    displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
+                                  <div id="owned-warrant-canaries" class="row"></div>`;
 
-  IDsOwned.forEach(function(element) {getAWarrantCanary(element, 'owned-warrant-canaries')});
-  displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
-  <div id="trusted-warrant-canaries" class="row"></div>`;
-  IDsTrusted.forEach(function(element) {getAWarrantCanary(element, 'trusted-warrant-canaries')});
+    IDsOwned.forEach(function (element) { getAWarrantCanary(element, 'owned-warrant-canaries') });
+  }
+  if (IDsTrusted.length > 0) {
+    displayLocation.innerHTML += `<div><h2> Trusted Third Party</h2><div>
+                                  <div id="trusted-warrant-canaries" class="row"></div>`;
+    IDsTrusted.forEach(function (element) { getAWarrantCanary(element, 'trusted-warrant-canaries') });
+  }
 }
 
 
