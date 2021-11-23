@@ -143,8 +143,7 @@ async function displayAWarrantCanary(ID, interactionRights,  location) {
       `<div>
         <button onclick="updateExpiration(${ID})" >Update Expiration</button>
         <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
-      </div>`);
-      htmlElement += (`
+      </div>
       <div>
         <button onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
         <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
