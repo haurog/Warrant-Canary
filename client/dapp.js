@@ -125,18 +125,21 @@ async function withdrawAllFunds(ID) {
 async function getAWarrantCanary(ID, location) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   const displayValue = document.getElementById(location);
+  let DateTime = new Date(stateofWC.expirationTime * 1000);
+  let funds = web3.utils.fromWei(stateofWC.enclosedFunds, 'ether');
   displayValue.innerHTML += (
-    `<div id="warrant-canary-${ID}" class="warrant-canary col-lg-3 col-md-5 col-sm-12 col-xs-12  m-1 overflow-scroll">
+    `<div id="warrant-canary-${ID}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll">
+    <div>
     <div class="float-right"><h4>${ID}</h4></div>
     <div class="purpose"> ${stateofWC.purpose} </div>
-    <div> Expiration: ${stateofWC.expirationTime} </div>
-    <div> Last updated: ${stateofWC.lastUpdatedInBlock} </div>
+    <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
+    <div> Last updated: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
     <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
-    <div> Third party: ${stateofWC.trustedThirdParty} </div>
-    <div> Funds: ${stateofWC.enclosedFunds} </div>
+    <div> Third party: ${stateofWC.trustedThirdParty}</div>
+    <div> Funds: ${funds} ETH</div>
     <div>
       <button onclick="updateExpiration(${ID})" >Update Expiration</button>
-      <input id="update-expiration-input-${ID}" type="number" placeholder="Expiration Time"/>
+      <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
     </div>
     <div>
       <button onclick="addFunds(${ID})">Add Funds</button>
@@ -144,16 +147,16 @@ async function getAWarrantCanary(ID, location) {
     </div>
     <div>
       <button onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
-      <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address of the New Third Party"/>
+      <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
     </div>
     <div>
       <button onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
-      <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="Funds to Withdraw in ETH"/>
+      <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
     </div>
     <div>
       <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
     </div>
-    <br/>
+    </div>
     </div> `
     );
 }
