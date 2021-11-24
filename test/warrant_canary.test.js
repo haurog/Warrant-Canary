@@ -206,10 +206,9 @@ contract("WarrantCanary", function (accounts) {
     );
   });
 
-  it("Testing third party access to funds.", async () => {
+  it("Testing trusted third party their access to funds.", async () => {
     await instance.changeTrustedThirdParty(0, accounts[5]);
     const addFundsTx = await instance.addFunds(0, { value: fundsAdded });
-
 
     await truffleAssert.reverts(
       instance.withdrawSomeFunds(0, 10, { from: accounts[1] }),
@@ -221,6 +220,18 @@ contract("WarrantCanary", function (accounts) {
       instance.changeTrustedThirdParty(0, zeroAddress),
       truffleAssert.ErrorType.REVERT,
       "There are enclosed funds, so the trusted third party address cannot be changed to 0x0."
+    );
+
+    await truffleAssert.reverts(
+      instance.changeTrustedThirdParty(0, accounts[0]),
+      truffleAssert.ErrorType.REVERT,
+      "Should not be able to set trusted third party to warrant canary owner."
+    );
+
+    await truffleAssert.reverts(
+      instance.createWarrantCanary(expirationTime, purpose, accounts[0]),
+      truffleAssert.ErrorType.REVERT,
+      "Should not be able create a warrant canary with trusted third party the same as owner."
     );
 
     truffleAssert.eventEmitted(
