@@ -64,6 +64,12 @@ body {
   margin: 5px;
 }
 
+.deleted {
+  font-size: 2em;
+  color: orange;
+  text-align: center;
+  margin: 30px;
+}
 
 
 

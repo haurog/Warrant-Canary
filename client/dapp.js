@@ -1,7 +1,7 @@
 
 var web3 = new Web3(window.ethereum);
 // contract address on Rinkeby:
-const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1'
+const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849' // '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1'
 let userAddress;
 let WarrantCanary;
 
@@ -131,6 +131,31 @@ async function withdrawAllFunds(ID) {
     ).send({from: ethereum.selectedAddress});
 }
 
+async function deleteWarrantCanary(ID) {
+  await window.WarrantCanary.methods.deleteWarrantCanary(
+    ID
+    ).send({from: ethereum.selectedAddress});
+}
+
+
+function checkIfDeleted(stateofWC) {
+  const zeroAddress = '0x0000000000000000000000000000000000000000'
+  // console.log("ID: " + stateofWC.ID)
+  // console.log("owner: " + stateofWC.warrantCanaryOwner + (stateofWC.warrantCanaryOwner == zeroAddress))
+  // console.log("trusted: " + stateofWC.trustedThirdParty + (stateofWC.trustedThirdParty == zeroAddress))
+  // console.log("time: " + stateofWC.expirationTime + (stateofWC.expirationTime == 0))
+  // console.log("block: " + stateofWC.lastUpdatedInBlock + (stateofWC.lastUpdatedInBlock == 0))
+  // console.log("purp: " + stateofWC.purpose + (stateofWC.purpose == ""))
+  if (stateofWC.warrantCanaryOwner == zeroAddress &&
+      stateofWC.trustedThirdParty == zeroAddress &&
+      stateofWC.expirationTime == 0 &&
+      stateofWC.lastUpdatedInBlock == 0 &&
+      stateofWC.purpose == ""
+     )
+  {return true;}
+  else {return false;}
+}
+
 // This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
@@ -143,18 +168,23 @@ async function displayAWarrantCanary(ID) {
   const displayLocation = document.getElementById(`warrant-canary-${ID}`);
   let DateTime = new Date(stateofWC.expirationTime * 1000);
   let funds = web3.utils.fromWei(stateofWC.enclosedFunds, 'ether');
-  htmlElement = "";
 
-  htmlElement += (
-    `<div><h4>${ID}</h4></div>
-    <div class="purpose"> ${stateofWC.purpose} </div>
-    <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
-    <div> Last updated in block: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
-    <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
-    <div> Third party: ${stateofWC.trustedThirdParty}</div>
-    <div> Funds: ${funds} ETH</div>`);
-  if (interactionRights == "Owner") {
-    htmlElement += (
+  const deleted = checkIfDeleted(stateofWC);
+  console.log("deleted: " + deleted)
+
+
+  htmlElement = "";
+  if (!deleted) {
+      htmlElement += (
+      `<div><h4>${ID}</h4></div>
+      <div class="purpose"> ${stateofWC.purpose} </div>
+      <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
+      <div> Last updated in block: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
+      <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
+      <div> Third party: ${stateofWC.trustedThirdParty}</div>
+      <div> Funds: ${funds} ETH</div>`);
+    if (interactionRights == "Owner") {
+      htmlElement += (
       `<div>
         <button onclick="updateExpiration(${ID})" >Update Expiration</button>
         <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
@@ -163,26 +193,35 @@ async function displayAWarrantCanary(ID) {
         <button onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
         <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
       </div>`);
-  }
-  htmlElement += (`
-    <div>
-      <button onclick="addFunds(${ID})">Add Funds</button>
-      <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
-    </div>`);
-  if (interactionRights == "Owner" || interactionRights == "Trusted") {
-    htmlElement += (`
-    <div>
-      <button onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
-      <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
-    </div>
-    <div>
-      <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
-    </div>`);
+    }
+    if (!deleted) {
+      htmlElement += (`
+      <div>
+        <button onclick="addFunds(${ID})">Add Funds</button>
+        <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
+      </div>`);
+    }
+    if (interactionRights == "Owner" || interactionRights == "Trusted") {
+      htmlElement += (`
+      <div>
+        <button onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
+        <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
+      </div>
+      <div>
+        <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
+      </div>
+      <div>
+        <button onclick="deleteWarrantCanary(${ID})">Delete</button>
+      </div>`);
+    }
+  } else {
+    htmlElement += (
+      `<div><h4>${ID}</h4></div>
+       <div class="deleted">This warrant canary has been deleted</div>`);
   }
 
   const oneWeekInSeconds = 604800;
-  if (timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
-
+  if (!deleted && timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
     if(timeNow > stateofWC.expirationTime) {
       htmlElement += `<div class="expired">Expired</div>`;
     } else {
@@ -198,7 +237,9 @@ async function displayAWarrantCanary(ID) {
       console.log(expiryMessage)
       htmlElement += `<div class="expiring_soon">Expiring ${expiryMessage}</div>`;
     }
-  }
+  } else if(true){}
+
+
   displayLocation.innerHTML = htmlElement;
 }
 
