@@ -122,20 +122,19 @@ async function withdrawAllFunds(ID) {
 }
 
 // This is really ugly code, but it works ....
-async function displayAWarrantCanary(ID,  location) {
+async function displayAWarrantCanary(ID) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   console.log("userAddress: " + window.userAddress);
   let interactionRights = "Anyone";
   if (stateofWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {interactionRights = "Owner"};
   if (stateofWC.trustedThirdParty.toLowerCase() == window.userAddress) {interactionRights = "Trusted"};
-  const displayValue = document.getElementById(location);
+  const displayLocation = document.getElementById(`warrant-canary-${ID}`);
   let DateTime = new Date(stateofWC.expirationTime * 1000);
   let funds = web3.utils.fromWei(stateofWC.enclosedFunds, 'ether');
   htmlElement = "";
 
   htmlElement += (
-    `<div id="warrant-canary-${ID}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll">
-    <div class="float-right"><h4>${ID}</h4></div>
+    `<div><h4>${ID}</h4></div>
     <div class="purpose"> ${stateofWC.purpose} </div>
     <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
     <div> Last updated in block: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
@@ -168,41 +167,70 @@ async function displayAWarrantCanary(ID,  location) {
       <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
     </div>`);
   }
-
-
-  htmlElement += (`</div>`);
-
-  displayValue.innerHTML += htmlElement;
+  displayLocation.innerHTML += htmlElement;
 }
 
 async function getAllWarrantCanaries() {
   let IDcount = await window.WarrantCanary.methods.IDcount.call().call();
   console.log("IDcount: " + IDcount)
   const displayLocation = document.getElementById('warrant-canaries');
-  displayLocation.innerHTML = "";
   displayLocation.innerHTML += `<div><h2> All Warrant Canaries </h2><div>
                                 <div id="all-warrant-canaries" class="row"></div>`;
+
+  tmpHTMLElement = "";
+
+  tmpHTMLElement += `<div><h2> All Warrant Canaries </h2><div>
+  <div id="all-warrant-canaries" class="row">`;
+
   for(i=0; i < IDcount; i++) {
-    await displayAWarrantCanary(i, 'all-warrant-canaries');
+    tmpHTMLElement += `<div id="warrant-canary-${i}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
   }
+  tmpHTMLElement += `</div>`;
+
+  displayLocation.innerHTML = tmpHTMLElement;
+
+  for(i=0; i < IDcount; i++) {
+    displayAWarrantCanary(i);
+  }
+
 }
+
+
 
 async function getAllAssociatedWarrantCanaries() {
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
+  IDsOwned = [...IDsOwned]; // clone array to make it writable
+  IDsTrusted = [...IDsTrusted]; // clone array to make it writable
+  IDsOwned.sort();
+  IDsTrusted.sort();
+
   const displayLocation = document.getElementById('warrant-canaries');
   displayLocation.innerHTML = "";
-  if (IDsOwned.length > 0) {
-    displayLocation.innerHTML += `<div><h2> Owned Warrant Canaries </h2><div>
-                                  <div id="owned-warrant-canaries" class="row"></div>`;
+  tmpHTMLElement = "";
 
-    IDsOwned.forEach(function (element) {displayAWarrantCanary(element, 'owned-warrant-canaries') });
+  if (IDsOwned.length > 0) {
+    tmpHTMLElement += `<div><h2> Owned Warrant Canaries </h2><div>
+                                  <div id="owned-warrant-canaries" class="row">`;
+    for(i=0; i<IDsOwned.length; i++){
+      tmpHTMLElement += `<div id="warrant-canary-${IDsOwned[i]}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
+    }
+    tmpHTMLElement += `</div>`;
   }
+
   if (IDsTrusted.length > 0) {
-    displayLocation.innerHTML += `<div><h2> As a Trusted Third Party</h2><div>
-                                  <div id="trusted-warrant-canaries" class="row"></div>`;
-    IDsTrusted.forEach(function (element) {displayAWarrantCanary(element, 'trusted-warrant-canaries') });
+    tmpHTMLElement += `<div><h2> As a Trusted Third Party</h2><div>
+                      <div id="trusted-warrant-canaries" class="row">`;
+    for(i=0; i<IDsTrusted.length; i++){
+      tmpHTMLElement += `<div id="warrant-canary-${IDsTrusted[i]}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
+    }
+    tmpHTMLElement += `</div>`;
   }
+
+  displayLocation.innerHTML = tmpHTMLElement;
+  IDsOwned.forEach(function (element) {displayAWarrantCanary(element) });
+  IDsTrusted.forEach(function (element) {displayAWarrantCanary(element) });
+
 }
 
 
