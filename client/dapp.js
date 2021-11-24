@@ -24,9 +24,7 @@ async function createContractObject() {
 
   // subscribe to events
   window.WarrantCanary.events.allEvents((err, events)=>{
-    // console.log(err, events);
     let ID = events.returnValues[0];
-    console.log("ID: " + ID);
     if (document.getElementById(`warrant-canary-${ID}`)) {
       displayAWarrantCanary(ID);
     }
@@ -101,7 +99,6 @@ async function updateExpiration(ID) {
 async function addFunds(ID) {
   const fundsToAddinETH = document.getElementById(`add-funds-input-${ID}`).value;
   const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether');
-  // console.log("funds to add: " + fundsToAddinETH + "  " + fundsToAddinWei)
   await window.WarrantCanary.methods.addFunds(
     ID
     ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
@@ -109,7 +106,6 @@ async function addFunds(ID) {
 
 async function changeTrustedThirdParty(ID) {
   const newTrustedThirdParty = document.getElementById(`change-trusted-third-party-input-${ID}`).value;
-  // console.log(newTrustedThirdParty);
   await window.WarrantCanary.methods.changeTrustedThirdParty(
     ID,
     newTrustedThirdParty
@@ -139,12 +135,6 @@ async function deleteWarrantCanary(ID) {
 
 function checkIfDeleted(stateofWC) {
   const zeroAddress = '0x0000000000000000000000000000000000000000'
-  // console.log("ID: " + stateofWC.ID)
-  // console.log("owner: " + stateofWC.warrantCanaryOwner + (stateofWC.warrantCanaryOwner == zeroAddress))
-  // console.log("trusted: " + stateofWC.trustedThirdParty + (stateofWC.trustedThirdParty == zeroAddress))
-  // console.log("time: " + stateofWC.expirationTime + (stateofWC.expirationTime == 0))
-  // console.log("block: " + stateofWC.lastUpdatedInBlock + (stateofWC.lastUpdatedInBlock == 0))
-  // console.log("purp: " + stateofWC.purpose + (stateofWC.purpose == ""))
   if (stateofWC.warrantCanaryOwner == zeroAddress &&
       stateofWC.trustedThirdParty == zeroAddress &&
       stateofWC.expirationTime == 0 &&
@@ -158,7 +148,6 @@ function checkIfDeleted(stateofWC) {
 // This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
-  // console.log("userAddress: " + window.userAddress);
   timeNow = Math.floor(new Date().getTime() / 1000);
   console.log(timeNow);
   let interactionRights = "Anyone";
@@ -169,7 +158,6 @@ async function displayAWarrantCanary(ID) {
   let funds = web3.utils.fromWei(stateofWC.enclosedFunds, 'ether');
 
   const deleted = checkIfDeleted(stateofWC);
-  console.log("deleted: " + deleted)
 
   htmlElement = "";
   if (!deleted) {
@@ -184,32 +172,32 @@ async function displayAWarrantCanary(ID) {
     if (interactionRights == "Owner") {
       htmlElement += (
       `<div>
-        <button class="button" onclick="updateExpiration(${ID})" >Update Expiration</button>
+        <button class="button_small" onclick="updateExpiration(${ID})" >Update Expiration</button>
         <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
       </div>
       <div>
-        <button class="button" onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
+        <button class="button_small" onclick="changeTrustedThirdParty(${ID})">Change Third Party</button>
         <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
       </div>`);
     }
     if (!deleted) {
       htmlElement += (`
       <div>
-        <button class="button" onclick="addFunds(${ID})">Add Funds</button>
+        <button class="button_small" onclick="addFunds(${ID})">Add Funds</button>
         <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
       </div>`);
     }
     if (interactionRights == "Owner" || interactionRights == "Trusted") {
       htmlElement += (`
       <div>
-        <button class="button" onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
+        <button class="button_small" onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
         <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
       </div>
       <div>
-        <button class="button" onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
+        <button class="button_small" onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
       </div>
       <div>
-        <button class="button" onclick="deleteWarrantCanary(${ID})">Delete</button>
+        <button class="button_small" onclick="deleteWarrantCanary(${ID})">Delete</button>
       </div>`);
     }
   } else {
@@ -232,7 +220,6 @@ async function displayAWarrantCanary(ID) {
       } else if ((Math.floor(expiryInSeconds/(60)) > 0)){
         expiryMessage = `in ${Math.floor(expiryInSeconds/(60))} minutes`;
       }
-      console.log(expiryMessage)
       htmlElement += `<div class="expiring_soon">Expiring ${expiryMessage}</div>`;
     }
   } else if(true){}
@@ -243,7 +230,6 @@ async function displayAWarrantCanary(ID) {
 
 async function getAllWarrantCanaries() {
   let IDcount = await window.WarrantCanary.methods.IDcount.call().call();
-  console.log("IDcount: " + IDcount)
   const displayLocation = document.getElementById('warrant-canaries');
   displayLocation.innerHTML += `<div><h2> All Warrant Canaries </h2><div>
                                 <div id="all-warrant-canaries" class="row"></div>`;
