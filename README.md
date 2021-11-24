@@ -25,6 +25,10 @@ The **owner** of the contract can:
 * Withdraw ERC-20 tokens which have been sent to the address accidentally.
 
 
+### Website
+
+The websity is deplyed using netlify: https://warrantcanary.netlify.app/
+
 ### Deployed Address
 
 The contract is on rinkeby under:
