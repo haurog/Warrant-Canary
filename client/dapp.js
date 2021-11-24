@@ -15,7 +15,7 @@ window.addEventListener('load', function(event) {
 
 async function createContractObject() {
   // Load ABI
-  let jsonFile = "./../build/contracts/WarrantCanary.json";
+  let jsonFile = "./ABI/WarrantCanary.json";
   var json = await $.getJSON(jsonFile);
   let wcABI = json.abi;
 
