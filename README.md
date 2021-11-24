@@ -33,7 +33,7 @@ The websity is deplyed using netlify: https://warrantcanary.netlify.app/
 
 The contract is on rinkeby under:
 
-[0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1](https://rinkeby.etherscan.io/address/0xf06c47b7feb65af49ddd78c1816bd4f31c2d56f1#code)
+[0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849](https://rinkeby.etherscan.io/address/0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849#code)
 
 
 ### Deployment
