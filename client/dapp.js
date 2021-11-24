@@ -21,6 +21,16 @@ async function createContractObject() {
 
   window.WarrantCanary = await new web3.eth.Contract(wcABI, wcAddress);
   await window.WarrantCanary.setProvider(window.ethereum);
+
+  // subscribe to events
+  window.WarrantCanary.events.allEvents((err, events)=>{
+    // console.log(err, events);
+    let ID = events.returnValues[0];
+    console.log("ID: " + ID);
+    if (document.getElementById(`warrant-canary-${ID}`)) {
+      displayAWarrantCanary(ID);
+    }
+  })
 }
 
 async function checkNetworkInMetamask() {
@@ -189,7 +199,7 @@ async function displayAWarrantCanary(ID) {
       htmlElement += `<div class="expiring_soon">Expiring ${expiryMessage}</div>`;
     }
   }
-  displayLocation.innerHTML += htmlElement;
+  displayLocation.innerHTML = htmlElement;
 }
 
 async function getAllWarrantCanaries() {
@@ -254,6 +264,7 @@ async function getAllAssociatedWarrantCanaries() {
   IDsTrusted.forEach(function (element) {displayAWarrantCanary(element) });
 
 }
+
 
 
 
