@@ -14,6 +14,7 @@ body {
 
 .navbar-brand {
   padding-top: 25px;
+  padding-bottom: 25px;
 }
 
 .navbar-brand h1 {
@@ -26,11 +27,6 @@ body {
   line-height: 0.75;
 }
 /* END HEADER */
-
-.container .jumbotron {
-  box-shadow: 0 0 50px ;
-  border: 2px solid ;
-}
 
 .warrant-canary {
   font-size: 0.8em;
@@ -59,17 +55,32 @@ body {
 
 .expiring_soon {
   font-size: 2em;
-  color: orange;
+  color: rgb(238, 143, 0);
   text-align: center;
   margin: 5px;
 }
 
 .deleted {
   font-size: 2em;
-  color: orange;
+  color: rgb(238, 143, 0);
   text-align: center;
   margin: 30px;
 }
+
+.button {
+  background-color: #596b27;
+  border: none;
+  color: white;
+  padding: 3px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px;
+  cursor: pointer;
+}
+
+
+
 
 
 

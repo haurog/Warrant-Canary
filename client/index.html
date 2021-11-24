@@ -22,12 +22,13 @@
           </div>
 
           <div id="mm-detected"></div>
-          <button id="mm-connect">Connect to MetaMask</button>
-          <div id="mm-current-account"></div>
+          <div>
+          <button class="button" id="mm-connect">Connect to MetaMask</button>
+          <label id="mm-current-account"></label></div>
 
 
           <div >
-            <button id="create-button" onclick="createWarrantCanary()">Create Warrant Canary</button>
+            <button class="button" id="create-button" onclick="createWarrantCanary()">Create Warrant Canary</button>
             <input id="create-button-expiration-input" type="number" placeholder="Expiration (unix epoch)"/>
             <input id="create-button-purpose-input" type="string" placeholder="Purpose"/>
             <input id="create-button-trustedThirdParty-input" type="string" placeholder="Third Party Address"/>
@@ -36,17 +37,14 @@
 
             <!-- Read input from contract -->
             <div>
-              <button onclick="getAllWarrantCanaries()" >Display All Warrant Canaries</button>
-            </div>
-            <div>
-              <button onclick="getAllAssociatedWarrantCanaries()" title="Get a list of all Warrant Canaries associated with this Ethereum account">Display All Associated Warrant Canaries</button>
+              <button class="button" onclick="getAllWarrantCanaries()" >Display All Warrant Canaries</button>
+              <button class="button" onclick="getAllAssociatedWarrantCanaries()" title="Get a list of all Warrant Canaries associated with this Ethereum account">Display All Associated Warrant Canaries</button>
             </div>
         </div>
-
-
       </div><!-- .container -->
     </nav><!-- #header-nav -->
   </header>
+    <br>
     <div id="warrant-canaries" class="container"></div>
 </body>
 

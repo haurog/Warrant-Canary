@@ -66,7 +66,7 @@ function checkIfMetamaskIsAvailable() {
 async function connectToMetamask() {
   await ethereum.request({ method: 'eth_requestAccounts'});
   var mmCurrentAccount = document.getElementById('mm-current-account');
-  mmCurrentAccount.innerHTML = 'Current Account: ' + ethereum.selectedAddress;
+  mmCurrentAccount.innerHTML = ethereum.selectedAddress;
   window.userAddress = ethereum.selectedAddress;
   await checkNetworkInMetamask();
 }
@@ -137,7 +137,6 @@ async function deleteWarrantCanary(ID) {
     ).send({from: ethereum.selectedAddress});
 }
 
-
 function checkIfDeleted(stateofWC) {
   const zeroAddress = '0x0000000000000000000000000000000000000000'
   // console.log("ID: " + stateofWC.ID)
@@ -172,7 +171,6 @@ async function displayAWarrantCanary(ID) {
   const deleted = checkIfDeleted(stateofWC);
   console.log("deleted: " + deleted)
 
-
   htmlElement = "";
   if (!deleted) {
       htmlElement += (
@@ -186,32 +184,32 @@ async function displayAWarrantCanary(ID) {
     if (interactionRights == "Owner") {
       htmlElement += (
       `<div>
-        <button onclick="updateExpiration(${ID})" >Update Expiration</button>
+        <button class="button" onclick="updateExpiration(${ID})" >Update Expiration</button>
         <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
       </div>
       <div>
-        <button onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
+        <button class="button" onclick="changeTrustedThirdParty(${ID})">Change Trusted Third Party</button>
         <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
       </div>`);
     }
     if (!deleted) {
       htmlElement += (`
       <div>
-        <button onclick="addFunds(${ID})">Add Funds</button>
+        <button class="button" onclick="addFunds(${ID})">Add Funds</button>
         <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
       </div>`);
     }
     if (interactionRights == "Owner" || interactionRights == "Trusted") {
       htmlElement += (`
       <div>
-        <button onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
+        <button class="button" onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
         <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
       </div>
       <div>
-        <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
+        <button class="button" onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
       </div>
       <div>
-        <button onclick="deleteWarrantCanary(${ID})">Delete</button>
+        <button class="button" onclick="deleteWarrantCanary(${ID})">Delete</button>
       </div>`);
     }
   } else {
@@ -268,8 +266,6 @@ async function getAllWarrantCanaries() {
 
 }
 
-
-
 async function getAllAssociatedWarrantCanaries() {
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
@@ -292,7 +288,7 @@ async function getAllAssociatedWarrantCanaries() {
   }
 
   if (IDsTrusted.length > 0) {
-    tmpHTMLElement += `<div><h2> As a Trusted Third Party</h2><div>
+    tmpHTMLElement += `<br><div><h2> As a Trusted Third Party</h2><div>
                       <div id="trusted-warrant-canaries" class="row">`;
     for(i=0; i<IDsTrusted.length; i++){
       tmpHTMLElement += `<div id="warrant-canary-${IDsTrusted[i]}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
@@ -303,7 +299,6 @@ async function getAllAssociatedWarrantCanaries() {
   displayLocation.innerHTML = tmpHTMLElement;
   IDsOwned.forEach(function (element) {displayAWarrantCanary(element) });
   IDsTrusted.forEach(function (element) {displayAWarrantCanary(element) });
-
 }
 
 
