@@ -48,11 +48,18 @@ contract WarrantCanary is Ownable, Pausable {
         _;
     }
 
-    modifier FundsOnlyWithThirdParty(address trustedThirdParty_) {
+    modifier fundsOnlyWithThirdParty(address trustedThirdParty_) {
         // only allow funding if a trusted third party is chosen
         if (trustedThirdParty_ == address(0)) {
             require(msg.value == 0, "Funds can only be sent to warrant canaries with a trusted third party set.");
         }
+        _;
+    }
+
+    modifier thirdPartyIsDifferentFromOwner(address owner_, address trustedThirdParty_) {
+        // Third Party cannot be set to warrant canary owner
+        require(owner_ != trustedThirdParty_,
+                "Trusted third party cannot be the same address as the owner.");
         _;
     }
 
@@ -67,7 +74,8 @@ contract WarrantCanary is Ownable, Pausable {
     )
         public
         payable
-        FundsOnlyWithThirdParty(trustedThirdParty_)
+        fundsOnlyWithThirdParty(trustedThirdParty_)
+        thirdPartyIsDifferentFromOwner(msg.sender, trustedThirdParty_)
         whenNotPaused()
     {
         warrantCanaries[IDcount] = warrantCanary(
@@ -111,7 +119,7 @@ contract WarrantCanary is Ownable, Pausable {
     function addFunds(uint warrantCanaryID_)
     public
     payable
-    FundsOnlyWithThirdParty(warrantCanaries[warrantCanaryID_].trustedThirdParty)
+    fundsOnlyWithThirdParty(warrantCanaries[warrantCanaryID_].trustedThirdParty)
     whenNotPaused()
     {
         warrantCanaries[warrantCanaryID_].enclosedFunds += msg.value;
@@ -126,7 +134,7 @@ contract WarrantCanary is Ownable, Pausable {
     )
         public
         onlyCanaryOwner(warrantCanaryID_)
-
+        thirdPartyIsDifferentFromOwner(msg.sender, newTrustedThirdParty_)
     {
         if (newTrustedThirdParty_ == address(0)) {
             require(warrantCanaries[warrantCanaryID_].enclosedFunds == 0,
