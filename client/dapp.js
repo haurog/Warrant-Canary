@@ -124,7 +124,9 @@ async function withdrawAllFunds(ID) {
 // This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID) {
   var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
-  console.log("userAddress: " + window.userAddress);
+  // console.log("userAddress: " + window.userAddress);
+  timeNow = Math.floor(new Date().getTime() / 1000);
+  console.log(timeNow);
   let interactionRights = "Anyone";
   if (stateofWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {interactionRights = "Owner"};
   if (stateofWC.trustedThirdParty.toLowerCase() == window.userAddress) {interactionRights = "Trusted"};
@@ -166,6 +168,9 @@ async function displayAWarrantCanary(ID) {
     <div>
       <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
     </div>`);
+  }
+  if (timeNow > stateofWC.expirationTime) {
+    htmlElement += `<div class="warning">Expired</div>`;
   }
   displayLocation.innerHTML += htmlElement;
 }
