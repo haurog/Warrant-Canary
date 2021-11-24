@@ -50,11 +50,18 @@ body {
   background: rgb(220, 233, 220);
 }
 
-.warning {
+.expired {
   font-size: 3em;
   color: red;
   text-align: center;
   margin: 10px;
+}
+
+.expiring_soon {
+  font-size: 2em;
+  color: orange;
+  text-align: center;
+  margin: 5px;
 }
 
 

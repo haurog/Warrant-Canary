@@ -169,8 +169,25 @@ async function displayAWarrantCanary(ID) {
       <button onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
     </div>`);
   }
-  if (timeNow > stateofWC.expirationTime) {
-    htmlElement += `<div class="warning">Expired</div>`;
+
+  const oneWeekInSeconds = 604800;
+  if (timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
+
+    if(timeNow > stateofWC.expirationTime) {
+      htmlElement += `<div class="expired">Expired</div>`;
+    } else {
+      expiryMessage = "now";
+      expiryInSeconds = stateofWC.expirationTime - timeNow;
+      if (Math.floor(expiryInSeconds/(24*3600)) > 0) {
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(24*3600))} days`;
+      } else if ((Math.floor(expiryInSeconds/(3600)) > 0)){
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(3600))} hours`;
+      } else if ((Math.floor(expiryInSeconds/(60)) > 0)){
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(60))} minutes`;
+      }
+      console.log(expiryMessage)
+      htmlElement += `<div class="expiring_soon">Expiring ${expiryMessage}</div>`;
+    }
   }
   displayLocation.innerHTML += htmlElement;
 }
