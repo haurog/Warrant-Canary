@@ -27,6 +27,8 @@ async function createContractObject() {
     let ID = events.returnValues[0];
     if (document.getElementById(`warrant-canary-${ID}`)) {
       displayAWarrantCanary(ID);
+    } else {
+      getAllAssociatedWarrantCanaries();
     }
   })
 }
