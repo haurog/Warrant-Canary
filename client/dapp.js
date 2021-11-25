@@ -61,10 +61,6 @@ function checkIfMetamaskIsAvailable() {
   }
 }
 
-function displayAlertMessage(message) {
-  alert(message);
-}
-
 async function connectToMetamask() {
   await ethereum.request({ method: 'eth_requestAccounts'});
   var mmCurrentAccount = document.getElementById('mm-current-account');
@@ -77,6 +73,33 @@ const mmEnable = document.getElementById('mm-connect');
 mmEnable.onclick = async () => {
   connectToMetamask();
 }
+
+function displayAlertMessage(message) {
+  alert(message);
+}
+
+async function checkIfUserCanInteract(ID) {
+  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  let timeNow = Math.floor(new Date().getTime() / 1000);
+  if (timeNow > stateofWC.expirationTime ||
+      stateofWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
+    return true;
+  } else {
+    displayAlertMessage("Warrant Canary has not expired yet, therefore as a trusted third party you cannot interact yet.")
+    return false;
+  }
+}
+
+async function checkIfCanDelete(ID) {
+  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  if (stateofWC.enclosedFunds == 0) {
+    return true;
+  } else {
+    displayAlertMessage("Warrant Canary still has enclosed funds and can not be deleted.")
+    return false;
+  }
+}
+
 
 async function createWarrantCanary() {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
@@ -117,24 +140,31 @@ async function changeTrustedThirdParty(ID) {
 }
 
 async function withdrawSomeFunds(ID) {
-  const fundsToWithdrawInETH = document.getElementById(`withdrawSome-button-funds-input-${ID}`).value;
-  const fundsToWithdrawInWei = web3.utils.toWei(fundsToWithdrawInETH, 'ether');
-  await window.WarrantCanary.methods.withdrawSomeFunds(
-    ID,
-    fundsToWithdrawInWei
-    ).send({from: ethereum.selectedAddress});
+  if (await checkIfUserCanInteract(ID)) {
+    const fundsToWithdrawInETH = document.getElementById(`withdrawSome-button-funds-input-${ID}`).value;
+    const fundsToWithdrawInWei = web3.utils.toWei(fundsToWithdrawInETH, 'ether');
+    await window.WarrantCanary.methods.withdrawSomeFunds(
+      ID,
+      fundsToWithdrawInWei
+      ).send({from: ethereum.selectedAddress});
+  }
 }
 
+
 async function withdrawAllFunds(ID) {
-  await window.WarrantCanary.methods.withdrawAllFunds(
-    ID
-    ).send({from: ethereum.selectedAddress});
+  if (await checkIfUserCanInteract(ID)) {
+    await window.WarrantCanary.methods.withdrawAllFunds(
+      ID
+      ).send({from: ethereum.selectedAddress});
+  }
 }
 
 async function deleteWarrantCanary(ID) {
-  await window.WarrantCanary.methods.deleteWarrantCanary(
-    ID
-    ).send({from: ethereum.selectedAddress});
+  if (await checkIfCanDelete(ID) && await checkIfUserCanInteract(ID)) {
+    await window.WarrantCanary.methods.deleteWarrantCanary(
+      ID
+    ).send({ from: ethereum.selectedAddress });
+  }
 }
 
 function checkIfDeleted(stateofWC) {
@@ -151,7 +181,7 @@ function checkIfDeleted(stateofWC) {
 
 // This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID) {
-  var stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   timeNow = Math.floor(new Date().getTime() / 1000);
   console.log(timeNow);
   let interactionRights = "Anyone";
