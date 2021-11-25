@@ -113,6 +113,14 @@ body {
   width: 55%;
 }
 
+.filler {
+  height: 60vmin
+}
+
+.panel-footer {
+  background-color: rgb(110, 53, 30);
+}
+
 @media (max-width: 767px) {
   /* Header */
   .navbar-brand h1 {
