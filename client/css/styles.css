@@ -120,8 +120,8 @@ body {
   }
 
   .logo_img {
-    scale: 0.4;
-    margin: -45px;
+    opacity: 0;
+    margin: -80px;
   }
 }
 
