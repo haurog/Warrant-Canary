@@ -38,6 +38,11 @@ The contract is on rinkeby under:
 [0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849](https://rinkeby.etherscan.io/address/0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849#code)
 
 
+### [Design Patterns Decisions](design_pattern_decisions.md)
+
+### [Avoiding Common Attacks](avoiding_common_attacks.md)
+
+
 ### Deployment
 
 To rinkeby:
