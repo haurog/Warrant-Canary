@@ -221,11 +221,12 @@ async function displayAWarrantCanary(ID) {
     htmlElement += (
       `<div><label class=ID>${ID}</label><label class=warning> ${expiryMessage} </label></div>
       <div class="purpose"> ${stateofWC.purpose} </div>
-      <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
-      <div> Last updated in block: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
+      <div class="important_info"> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
+      <div class="important_info"> Funds: ${funds} ETH</div>
+      <div> Updated: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
       <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
       <div> Third party: ${stateofWC.trustedThirdParty}</div>
-      <div> Funds: ${funds} ETH</div>`);
+      `);
     if (interactionRights == "Owner") {
       htmlElement += (
       `<div>

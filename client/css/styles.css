@@ -73,6 +73,11 @@ body {
   margin: 30px;
 }
 
+.important_info {
+  font-size: 1em;
+  color: black;
+}
+
 .button {
   background-color: #596b27;
   border: none;
