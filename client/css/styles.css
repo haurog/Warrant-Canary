@@ -121,8 +121,13 @@ body {
   background-color: rgb(110, 53, 30);
 }
 
+
 a {
   color: black;
+}
+
+.footer_link {
+  color: white;
 }
 
 @media (max-width: 767px) {
