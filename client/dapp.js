@@ -79,10 +79,10 @@ function displayAlertMessage(message) {
 }
 
 async function checkIfUserCanInteract(ID) {
-  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  let stateOfWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   let timeNow = Math.floor(new Date().getTime() / 1000);
-  if (timeNow > stateofWC.expirationTime ||
-      stateofWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
+  if (timeNow > stateOfWC.expirationTime ||
+      stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
     return true;
   } else {
     displayAlertMessage("Warrant Canary has not expired yet, therefore as a trusted third party you cannot interact yet.")
@@ -91,8 +91,8 @@ async function checkIfUserCanInteract(ID) {
 }
 
 async function checkIfCanDelete(ID) {
-  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
-  if (stateofWC.enclosedFunds == 0) {
+  let stateOfWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  if (stateOfWC.enclosedFunds == 0) {
     return true;
   } else {
     displayAlertMessage("Warrant Canary still has enclosed funds and can not be deleted.")
@@ -120,17 +120,17 @@ async function createWarrantCanary() {
     createTrustedThirdPartyInput = zeroAddress;
   }
 
-  let fundsToAddinETH = document.getElementById(`create-button-funds-input`).value;
-  if (!fundsToAddinETH) {
-    fundsToAddinETH = '0';
+  let fundsToAddInETH = document.getElementById(`create-button-funds-input`).value;
+  if (!fundsToAddInETH) {
+    fundsToAddInETH = '0';
   }
-  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether')
+  const fundsToAddInWei = web3.utils.toWei(fundsToAddInETH, 'ether')
 
   await window.WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createTrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei})
+    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei})
     .on('confirmation', function(confirmationNumber, receipt){
       getAllAssociatedWarrantCanaries();
     });
@@ -145,11 +145,11 @@ async function updateExpiration(ID) {
 }
 
 async function addFunds(ID) {
-  const fundsToAddinETH = document.getElementById(`add-funds-input-${ID}`).value;
-  const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether');
+  const fundsToAddInETH = document.getElementById(`add-funds-input-${ID}`).value;
+  const fundsToAddInWei = web3.utils.toWei(fundsToAddInETH, 'ether');
   await window.WarrantCanary.methods.addFunds(
     ID
-    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
+    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei});
 }
 
 async function changeTrustedThirdParty(ID) {
@@ -187,13 +187,13 @@ async function deleteWarrantCanary(ID) {
   }
 }
 
-function checkIfDeleted(stateofWC) {
+function checkIfDeleted(stateOfWC) {
   const zeroAddress = '0x0000000000000000000000000000000000000000'
-  if (stateofWC.warrantCanaryOwner == zeroAddress &&
-      stateofWC.trustedThirdParty == zeroAddress &&
-      stateofWC.expirationTime == 0 &&
-      stateofWC.lastUpdatedInBlock == 0 &&
-      stateofWC.purpose == ""
+  if (stateOfWC.warrantCanaryOwner == zeroAddress &&
+      stateOfWC.trustedThirdParty == zeroAddress &&
+      stateOfWC.expirationTime == 0 &&
+      stateOfWC.lastUpdatedInBlock == 0 &&
+      stateOfWC.purpose == ""
      )
   {return true;}
   else {return false;}
@@ -201,26 +201,26 @@ function checkIfDeleted(stateofWC) {
 
 // This is really ugly code, but it works ....
 async function displayAWarrantCanary(ID) {
-  let stateofWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
+  let stateOfWC = await window.WarrantCanary.methods.warrantCanaries(ID).call();
   timeNow = Math.floor(new Date().getTime() / 1000);
   console.log(timeNow);
   let interactionRights = "Anyone";
-  if (stateofWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {interactionRights = "Owner"};
-  if (stateofWC.trustedThirdParty.toLowerCase() == window.userAddress) {interactionRights = "Trusted"};
+  if (stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {interactionRights = "Owner"};
+  if (stateOfWC.trustedThirdParty.toLowerCase() == window.userAddress) {interactionRights = "Trusted"};
   const displayLocation = document.getElementById(`warrant-canary-${ID}`);
-  let DateTime = new Date(stateofWC.expirationTime * 1000);
-  let funds = web3.utils.fromWei(stateofWC.enclosedFunds, 'ether');
+  let DateTime = new Date(stateOfWC.expirationTime * 1000);
+  let funds = web3.utils.fromWei(stateOfWC.enclosedFunds, 'ether');
 
-  const deleted = checkIfDeleted(stateofWC);
+  const deleted = checkIfDeleted(stateOfWC);
 
   let expiryMessage = "";
   const oneWeekInSeconds = 604800;
-  if (!deleted && timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
-    if(timeNow > stateofWC.expirationTime) {
+  if (!deleted && timeNow + oneWeekInSeconds > stateOfWC.expirationTime) {
+    if(timeNow > stateOfWC.expirationTime) {
       expiryMessage = `<label class="expired">Expired</label>`;
     } else {
       expiryMessage = "now";
-      expiryInSeconds = stateofWC.expirationTime - timeNow;
+      expiryInSeconds = stateOfWC.expirationTime - timeNow;
       if (Math.floor(expiryInSeconds/(24*3600)) > 0) {
         expiryMessage = `in ${Math.floor(expiryInSeconds/(24*3600))} days`;
       } else if ((Math.floor(expiryInSeconds/(3600)) > 0)){
@@ -237,12 +237,12 @@ async function displayAWarrantCanary(ID) {
   if (!deleted) {
     htmlElement += (
       `<div><label class=ID>${ID}</label><label class=warning> ${expiryMessage} </label></div>
-      <div class="purpose"> ${stateofWC.purpose} </div>
-      <div class="important_info"> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
+      <div class="purpose"> ${stateOfWC.purpose} </div>
+      <div class="important_info"> Expiration: ${DateTime.toLocaleString()} (${stateOfWC.expirationTime})</div>
       <div class="important_info"> Funds: ${funds} ETH</div>
-      <div> Updated: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
-      <div> Owner: ${stateofWC.warrantCanaryOwner} </div>
-      <div> Third party: ${stateofWC.trustedThirdParty}</div>
+      <div> Updated: <a href=https://rinkeby.etherscan.io/block/${stateOfWC.lastUpdatedInBlock} target="_blank" > ${stateOfWC.lastUpdatedInBlock} </a></div>
+      <div> Owner: ${stateOfWC.warrantCanaryOwner} </div>
+      <div> Third party: ${stateOfWC.trustedThirdParty}</div>
       `);
     if (interactionRights == "Owner") {
       htmlElement += (
