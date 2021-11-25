@@ -26,6 +26,12 @@ body {
   text-shadow: 2px 2px 2px #222 ;
   line-height: 0.75;
 }
+
+.logo_img {
+  scale: 0.8;
+  margin: -25px;
+}
+
 /* END HEADER */
 
 .warrant-canary {
@@ -112,5 +118,11 @@ body {
   .navbar-brand h1 {
     font-size: 2em;
   }
+
+  .logo_img {
+    scale: 0.4;
+    margin: -45px;
+  }
+}
 
 
