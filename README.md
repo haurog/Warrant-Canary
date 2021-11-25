@@ -46,12 +46,21 @@ The contract is on rinkeby under:
 
 ### [Avoiding Common Attacks](avoiding_common_attacks.md)
 
+### Directory Structure
+
+* `.github/workflows`: Defining github actions to run tests automatically
+* `client`: Frontend for the Warrant Canary contract. Plain HTML, CSS and javascript.
+* contracts: Deployed smart contracts.
+* migrations: Migration configuration files for deploying the smart contracts.
+* test: Files for testing the smart contracts with truffle.
+
+
 ### Run tests locally
 
+* Run npm install in project to install dependencies.
+* Run ganache on port: `8545`
+* Run truffle `truffle test`
 
-Run npm install in project to install dependencies.
-Run ganache on port: `8545`
-Run truffle `truffle test`
 ### Deployment
 
 To rinkeby:
@@ -63,3 +72,7 @@ Verify:
 ```
 truffle run verify WarrantCanary --network rinkeby
 ```
+
+### Public Ethereum Address to receive Certificate as NFT
+
+haurog.eth aka 0x1c0AcCc24e1549125b5b3c14D999D3a496Afbdb1
