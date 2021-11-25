@@ -107,6 +107,10 @@ body {
   width: 55%;
 }
 
-
+@media (max-width: 767px) {
+  /* Header */
+  .navbar-brand h1 {
+    font-size: 2em;
+  }
 
 
