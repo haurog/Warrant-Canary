@@ -159,10 +159,30 @@ async function displayAWarrantCanary(ID) {
 
   const deleted = checkIfDeleted(stateofWC);
 
+  let expiryMessage = "";
+  const oneWeekInSeconds = 604800;
+  if (!deleted && timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
+    if(timeNow > stateofWC.expirationTime) {
+      expiryMessage = `<label class="expired">Expired</label>`;
+    } else {
+      expiryMessage = "now";
+      expiryInSeconds = stateofWC.expirationTime - timeNow;
+      if (Math.floor(expiryInSeconds/(24*3600)) > 0) {
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(24*3600))} days`;
+      } else if ((Math.floor(expiryInSeconds/(3600)) > 0)){
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(3600))} hours`;
+      } else if ((Math.floor(expiryInSeconds/(60)) > 0)){
+        expiryMessage = `in ${Math.floor(expiryInSeconds/(60))} minutes`;
+      }
+      expiryMessage = `<label class="expiring_soon">Expiring ${expiryMessage}</label>`;
+    }
+  }
+
+
   htmlElement = "";
   if (!deleted) {
       htmlElement += (
-      `<div><h4>${ID}</h4></div>
+      `<div><label class=ID>${ID}</label><label class=warning> ${expiryMessage} </label></div>
       <div class="purpose"> ${stateofWC.purpose} </div>
       <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
       <div> Last updated in block: <a href=https://rinkeby.etherscan.io/block/${stateofWC.lastUpdatedInBlock} target="_blank" > ${stateofWC.lastUpdatedInBlock} </a></div>
@@ -205,24 +225,6 @@ async function displayAWarrantCanary(ID) {
       `<div><h4>${ID}</h4></div>
        <div class="deleted">This warrant canary has been deleted</div>`);
   }
-
-  const oneWeekInSeconds = 604800;
-  if (!deleted && timeNow + oneWeekInSeconds > stateofWC.expirationTime) {
-    if(timeNow > stateofWC.expirationTime) {
-      htmlElement += `<div class="expired">Expired</div>`;
-    } else {
-      expiryMessage = "now";
-      expiryInSeconds = stateofWC.expirationTime - timeNow;
-      if (Math.floor(expiryInSeconds/(24*3600)) > 0) {
-        expiryMessage = `in ${Math.floor(expiryInSeconds/(24*3600))} days`;
-      } else if ((Math.floor(expiryInSeconds/(3600)) > 0)){
-        expiryMessage = `in ${Math.floor(expiryInSeconds/(3600))} hours`;
-      } else if ((Math.floor(expiryInSeconds/(60)) > 0)){
-        expiryMessage = `in ${Math.floor(expiryInSeconds/(60))} minutes`;
-      }
-      htmlElement += `<div class="expiring_soon">Expiring ${expiryMessage}</div>`;
-    }
-  } else if(true){}
 
 
   displayLocation.innerHTML = htmlElement;

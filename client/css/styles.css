@@ -41,23 +41,29 @@ body {
 
 .purpose {
   font-size: 2em;
+  font-weight:700;
   color: black;
-  text-align: left;
+  line-height: 1;
   background: rgb(220, 233, 220);
+  margin: 10px 0px 10px 0px;
+}
+
+.ID {
+  font-size: 1.5em;
+  color: black;
+  margin: 0px 10px 0px 0px;
 }
 
 .expired {
-  font-size: 3em;
+  font-size: 1.5em;
   color: #d5560d;
   text-align: left;
-  margin: 10px;
 }
 
 .expiring_soon {
-  font-size: 2em;
+  font-size: 1.5em;
   color: #d5560d;
   text-align: left;
-  margin: 5px;
 }
 
 .deleted {

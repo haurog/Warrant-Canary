@@ -23,23 +23,26 @@
 
           <div id="mm-detected"></div>
           <div>
-          <button class="button" id="mm-connect">Connect to MetaMask</button>
-          <label id="mm-current-account"></label></div>
+            <button class="button" id="mm-connect">Connect to MetaMask</button>
+            <label id="mm-current-account"></label>
+          </div>
 
 
-          <div >
+          <div>
             <button class="button" id="create-button" onclick="createWarrantCanary()">Create Warrant Canary</button>
-            <input id="create-button-expiration-input" type="number" placeholder="Expiration (unix epoch)"/>
-            <input id="create-button-purpose-input" type="string" placeholder="Purpose"/>
-            <input id="create-button-trustedThirdParty-input" type="string" placeholder="Third Party Address"/>
-            <input id="create-button-funds-input" type="number" placeholder="Funds in ETH"/>
-            </div>
+            <input id="create-button-expiration-input" type="number" placeholder="Expiration (unix epoch)" />
+            <input id="create-button-purpose-input" type="string" placeholder="Purpose" />
+            <input id="create-button-trustedThirdParty-input" type="string" placeholder="Third Party Address" />
+            <input id="create-button-funds-input" type="number" placeholder="Funds in ETH" />
+          </div>
 
-            <!-- Read input from contract -->
-            <div>
-              <button class="button" onclick="getAllWarrantCanaries()" >Display All Warrant Canaries</button>
-              <button class="button" onclick="getAllAssociatedWarrantCanaries()" title="Get a list of all Warrant Canaries associated with this Ethereum account">Display All Associated Warrant Canaries</button>
-            </div>
+          <!-- Read input from contract -->
+          <div>
+            <button class="button" onclick="getAllWarrantCanaries()">Display All Warrant Canaries</button>
+            <button class="button" onclick="getAllAssociatedWarrantCanaries()"
+              title="Get a list of all Warrant Canaries associated with this Ethereum account">Display All Associated Warrant
+              Canaries</button>
+          </div>
         </div>
       </div><!-- .container -->
     </nav><!-- #header-nav -->
