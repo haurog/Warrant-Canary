@@ -105,7 +105,17 @@ async function checkIfCanDelete(ID) {
 
 async function createWarrantCanary() {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
+  if (createExpirationInput == 0) {
+    displayAlertMessage("You have not defined an expiration time for the Warrant Canary.");
+    return;
+  }
+
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
+  if (createPurposeInput == 0) {
+    displayAlertMessage("You have not defined a purpose for the Warrant Canary.");
+    return;
+  }
+
   let createTrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
   if (createTrustedThirdPartyInput == 0) {
     const zeroAddress = '0x0000000000000000000000000000000000000000';
