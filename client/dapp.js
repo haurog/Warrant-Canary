@@ -27,8 +27,6 @@ async function createContractObject() {
     let ID = events.returnValues[0];
     if (document.getElementById(`warrant-canary-${ID}`)) {
       displayAWarrantCanary(ID);
-    } else {
-      getAllAssociatedWarrantCanaries();
     }
   })
 }
@@ -132,7 +130,10 @@ async function createWarrantCanary() {
     createExpirationInput,
     createPurposeInput,
     createTrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
+    ).send({from: ethereum.selectedAddress, value: fundsToAddinWei})
+    .on('confirmation', function(confirmationNumber, receipt){
+      getAllAssociatedWarrantCanaries();
+    });
 }
 
 async function updateExpiration(ID) {
@@ -169,7 +170,6 @@ async function withdrawSomeFunds(ID) {
       ).send({from: ethereum.selectedAddress});
   }
 }
-
 
 async function withdrawAllFunds(ID) {
   if (await checkIfUserCanInteract(ID)) {
@@ -235,9 +235,6 @@ async function displayAWarrantCanary(ID) {
 
   htmlElement = "";
   if (!deleted) {
-
-    let onclicknotWithdrawAll =
-
     htmlElement += (
       `<div><label class=ID>${ID}</label><label class=warning> ${expiryMessage} </label></div>
       <div class="purpose"> ${stateofWC.purpose} </div>
