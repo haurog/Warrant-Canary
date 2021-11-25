@@ -57,8 +57,12 @@ function checkIfMetamaskIsAvailable() {
     console.log('window.ethereum is not found');
     let mmDetected = document.getElementById('mm-detected');
     mmDetected.innerHTML += '<p>MetaMask Not Available!<p>';
-    alert("you have no metamask installed");
+    displayAlertMessage("you have no metamask installed");
   }
+}
+
+function displayAlertMessage(message) {
+  alert(message);
 }
 
 async function connectToMetamask() {
@@ -181,7 +185,10 @@ async function displayAWarrantCanary(ID) {
 
   htmlElement = "";
   if (!deleted) {
-      htmlElement += (
+
+    let onclicknotWithdrawAll =
+
+    htmlElement += (
       `<div><label class=ID>${ID}</label><label class=warning> ${expiryMessage} </label></div>
       <div class="purpose"> ${stateofWC.purpose} </div>
       <div> Expiration: ${DateTime.toLocaleString()} (${stateofWC.expirationTime})</div>
@@ -193,25 +200,25 @@ async function displayAWarrantCanary(ID) {
       htmlElement += (
       `<div>
         <button class="button_small" onclick="updateExpiration(${ID})" >Update Expiration</button>
-        <input id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
+        <input class="input" id="update-expiration-input-${ID}" type="number" placeholder="Unix Epoch"/>
       </div>
       <div>
         <button class="button_small" onclick="changeTrustedThirdParty(${ID})">Change Third Party</button>
-        <input id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
+        <input class="input" id="change-trusted-third-party-input-${ID}" type="string" placeholder="Address"/>
       </div>`);
     }
     if (!deleted) {
       htmlElement += (`
       <div>
         <button class="button_small" onclick="addFunds(${ID})">Add Funds</button>
-        <input id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
+        <input class="input" id="add-funds-input-${ID}" type="number" placeholder="ETH to add"/>
       </div>`);
     }
     if (interactionRights == "Owner" || interactionRights == "Trusted") {
       htmlElement += (`
       <div>
         <button class="button_small" onclick="withdrawSomeFunds(${ID})">Withdraw Some Funds</button>
-        <input id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
+        <input class="input" id="withdrawSome-button-funds-input-${ID}" type="number" placeholder="ETH to withdraw"/>
       </div>
       <div>
         <button class="button_small" onclick="withdrawAllFunds(${ID})">Withdraw All Funds</button>
@@ -242,7 +249,7 @@ async function getAllWarrantCanaries() {
   <div id="all-warrant-canaries" class="row">`;
 
   for(i=0; i < IDcount; i++) {
-    tmpHTMLElement += `<div id="warrant-canary-${i}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
+    tmpHTMLElement += `<div id="warrant-canary-${i}" class="warrant-canary col-xl-4 col-lg-6 col-xs-12 overflow-scroll"></div>`;
   }
   tmpHTMLElement += `</div>`;
 
