@@ -121,6 +121,10 @@ body {
   background-color: rgb(110, 53, 30);
 }
 
+a {
+  color: black;
+}
+
 @media (max-width: 767px) {
   /* Header */
   .navbar-brand h1 {
