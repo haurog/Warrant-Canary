@@ -106,14 +106,22 @@ async function checkIfCanDelete(ID) {
 async function createWarrantCanary() {
   const createExpirationInput = document.getElementById('create-button-expiration-input').value;
   const createPurposeInput = document.getElementById('create-button-purpose-input').value;
-  const createtrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
-  const fundsToAddinETH = document.getElementById(`create-button-funds-input`).value;
+  let createTrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
+  if (createTrustedThirdPartyInput == 0) {
+    const zeroAddress = '0x0000000000000000000000000000000000000000';
+    createTrustedThirdPartyInput = zeroAddress;
+  }
+
+  let fundsToAddinETH = document.getElementById(`create-button-funds-input`).value;
+  if (!fundsToAddinETH) {
+    fundsToAddinETH = '0';
+  }
   const fundsToAddinWei = web3.utils.toWei(fundsToAddinETH, 'ether')
 
   await window.WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
-    createtrustedThirdPartyInput
+    createTrustedThirdPartyInput
     ).send({from: ethereum.selectedAddress, value: fundsToAddinWei});
 }
 
