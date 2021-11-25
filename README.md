@@ -52,7 +52,7 @@ The website is deployed using netlify: https://warrantcanary.netlify.app/
 
 ### Run tests locally
 
-* Run npm install in project to install dependencies.
+* Run `npm install` in project root to install dependencies.
 * Run ganache on port: `8545`
 * Run truffle `truffle test`
 
