@@ -46,7 +46,12 @@ The contract is on rinkeby under:
 
 ### [Avoiding Common Attacks](avoiding_common_attacks.md)
 
+### Run tests locally
 
+
+Run npm install in project to install dependencies.
+Run ganache on port: `8545`
+Run truffle `truffle test`
 ### Deployment
 
 To rinkeby:
