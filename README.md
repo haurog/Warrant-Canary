@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5561d0b9-0edc-4994-afea-e8013861e87f/deploy-status)](https://app.netlify.com/sites/warrantcanary/deploys)
+
 # Final Project: A warrant canary with enclosed funds
 
 The idea of this project is to build a warrant canary contract, which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp (blocknumber) in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet.
