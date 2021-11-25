@@ -277,7 +277,7 @@ async function getAllAssociatedWarrantCanaries() {
     tmpHTMLElement += `<div><h2> Owned Warrant Canaries </h2><div>
                                   <div id="owned-warrant-canaries" class="row">`;
     for(i=0; i<IDsOwned.length; i++){
-      tmpHTMLElement += `<div id="warrant-canary-${IDsOwned[i]}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
+      tmpHTMLElement += `<div id="warrant-canary-${IDsOwned[i]}" class="warrant-canary col-xl-4 col-lg-6 col-xs-12 overflow-scroll"></div>`;
     }
     tmpHTMLElement += `</div>`;
   }
@@ -286,7 +286,7 @@ async function getAllAssociatedWarrantCanaries() {
     tmpHTMLElement += `<br><div><h2> As a Trusted Third Party</h2><div>
                       <div id="trusted-warrant-canaries" class="row">`;
     for(i=0; i<IDsTrusted.length; i++){
-      tmpHTMLElement += `<div id="warrant-canary-${IDsTrusted[i]}" class="warrant-canary col-lg-4 col-md-6 col-xs-12 overflow-scroll"></div>`;
+      tmpHTMLElement += `<div id="warrant-canary-${IDsTrusted[i]}" class="warrant-canary col-xl-4 col-lg-6 col-xs-12 overflow-scroll"></div>`;
     }
     tmpHTMLElement += `</div>`;
   }
