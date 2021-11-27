@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/5561d0b9-0edc-4994-afea-e8013861e87f/deploy-status)](https://app.netlify.com/sites/warrantcanary/deploys)
 
-# Final Project: A warrant canary with enclosed funds
+# Final Project: A Warrant Canary with Enclosed Funds
 
 This project is a [warrant canary contract](https://en.wikipedia.org/wiki/Warrant_canary), which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet. In this configuration the contract acts like a [dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch).
 
@@ -56,7 +56,7 @@ https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-
 * test: Files for testing the smart contracts with truffle.
 
 
-### Run tests locally
+### Run Tests Locally
 
 * Run `npm install` in project root to install dependencies.
 * Run ganache on port: `8545`
@@ -74,6 +74,13 @@ Verify:
 truffle run verify WarrantCanary --network rinkeby
 ```
 
-### Public Ethereum Address to receive Certificate as NFT
+### Public Ethereum Address to Receive Certificate as NFT
 
 haurog.eth aka 0x1c0AcCc24e1549125b5b3c14D999D3a496Afbdb1
+
+### Possible Improvements and Known Issues
+
+* The website might reload a few times after creating a new warrant canary. In general event handling does not seem to be too reliable.
+* If ERC-20 tokens are accidentally sent to the contract they cannot be retrieved.
+* To make this contractand frontend more useable, a badge like element, like netlify badge at the top of this readme, will need to be developed such that anyone can add such a badge to their website to publicly show the status of their warrant canary.
+
