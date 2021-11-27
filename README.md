@@ -58,6 +58,9 @@ https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-
 
 ### Run Tests Locally
 
+* Install NodeJS
+* Install truffle
+* Install and run ganache-cli or ganache
 * Run `npm install` in project root to install dependencies.
 * Run ganache on port: `8545`
 * Run truffle `truffle test`
