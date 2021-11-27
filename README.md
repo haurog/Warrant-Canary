@@ -35,6 +35,12 @@ The **owner** of the contract can:
 
 The website is deployed using netlify: https://warrantcanary.netlify.app/
 
+
+
+https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-a4e5-dc094dee31ba.mp4
+
+
+
 ### [Design Patterns Decisions](design_pattern_decisions.md)
 
 ### [Avoiding Common Attacks](avoiding_common_attacks.md)
