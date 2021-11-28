@@ -31,9 +31,9 @@ Please answer the following questions. Does your project:
 9. Have clear instructions for:
 1) Installing dependencies for your project
 2) Accessing or—if your project needs a server (not required)—running your project
-3) Running your smart contract unit tests and which port a local testnet should be running on. YES/NO
+3) Running your smart contract unit tests and which port a local testnet should be running on. YES
 
-10. A screencast of you walking through your project? YES/NO
+10. A screencast of you walking through your project? YES
 
 
 Congratulations on finishing your final project!
