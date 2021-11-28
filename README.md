@@ -1,4 +1,4 @@
-![Truffle Tests](https://github.com/haurog/blockchain-developer-bootcamp-final-project/blob/main/.github/workflows/truffle_tests_extended.yml/badge.svg) [![Netlify Status](https://api.netlify.com/api/v1/badges/5561d0b9-0edc-4994-afea-e8013861e87f/deploy-status)](https://app.netlify.com/sites/warrantcanary/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5561d0b9-0edc-4994-afea-e8013861e87f/deploy-status)](https://app.netlify.com/sites/warrantcanary/deploys)
 
 # Final Project: A Warrant Canary with Enclosed Funds
 
