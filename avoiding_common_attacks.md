@@ -11,3 +11,7 @@ Use Check-Effects-Interactions pattern in the function `withdrawSomeFunds()`.
 ## SWC-103 (Floating pragma)
 
 Used a very specific compiler version `0.8.9` to make sure it will be compiled with the same version on any machine.
+
+## SWC-135 (Code With No Effects)
+
+Use test coverage to make sure that all lines of code are touched by the test. Only 2 branches are not tested, both of them are only executed in case of withdrawn amount is rejected by the receiving address. This case would revert the whole transaction and does not need to be tested in too much detail.

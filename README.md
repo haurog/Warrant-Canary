@@ -43,7 +43,7 @@ https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-
 
 ### [Design Patterns Decisions](design_pattern_decisions.md)
 
-### [Avoiding Common Attacks](avoiding_common_attacks.md)
+### [Avoiding Attack Vectors and Bugs](avoiding_common_attacks.md)
 
 ### [Deployed Address](deployed_address.txt)
 
@@ -64,6 +64,7 @@ https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-
 * Run `npm install` in project root to install dependencies.
 * Run ganache on port: `8545`
 * Run truffle `truffle test`
+* Code coverage can be tested with `truffle run coverage`
 
 ### Deployment
 
