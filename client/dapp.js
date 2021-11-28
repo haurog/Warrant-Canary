@@ -1,7 +1,7 @@
-
 var web3 = new Web3(window.ethereum);
 // contract address on Rinkeby:
-const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849' // '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1'
+const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849'
+// const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1' // old contract address
 let userAddress;
 let WarrantCanary;
 
@@ -27,6 +27,12 @@ async function createContractObject() {
     let ID = events.returnValues[0];
     if (document.getElementById(`warrant-canary-${ID}`)) {
       displayAWarrantCanary(ID);
+    } else {
+      window.WarrantCanary.methods.warrantCanaries(ID).call().then(function(stateOfWC) {
+        if(stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {
+          getAllAssociatedWarrantCanaries();
+        }
+      });
     }
   })
 }
@@ -130,10 +136,7 @@ async function createWarrantCanary() {
     createExpirationInput,
     createPurposeInput,
     createTrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei})
-    .on('confirmation', function(confirmationNumber, receipt){
-      getAllAssociatedWarrantCanaries();
-    });
+    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei});
 }
 
 async function updateExpiration(ID) {
