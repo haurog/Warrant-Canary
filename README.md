@@ -83,7 +83,7 @@ haurog.eth aka 0x1c0AcCc24e1549125b5b3c14D999D3a496Afbdb1
 
 ### Possible Improvements and Known Issues
 
-* The website might reload a few times after creating a new warrant canary. In general event handling does not seem to be too reliable.
+* In general event handling does not seem to be too reliable, sometimes it is missing updates.
 * If ERC-20 tokens are accidentally sent to the contract they cannot be retrieved.
 * To make this contractand frontend more useable, a badge like element, like netlify badge at the top of this readme, will need to be developed such that anyone can add such a badge to their website to publicly show the status of their warrant canary.
 
