@@ -124,6 +124,9 @@ async function createWarrantCanary() {
   let createTrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
   if (createTrustedThirdPartyInput == 0) {
     createTrustedThirdPartyInput = zeroAddress;
+  } else if (createTrustedThirdPartyInput == ethereum.selectedAddress) {
+    displayAlertMessage("The trusted third party cannot be the same address as the owner.");
+    return;
   }
 
   let fundsToAddInETH = document.getElementById(`create-button-funds-input`).value;
