@@ -120,16 +120,22 @@ async function createWarrantCanary() {
     return;
   }
 
+  const zeroAddress = '0x0000000000000000000000000000000000000000';
   let createTrustedThirdPartyInput = document.getElementById('create-button-trustedThirdParty-input').value;
   if (createTrustedThirdPartyInput == 0) {
-    const zeroAddress = '0x0000000000000000000000000000000000000000';
     createTrustedThirdPartyInput = zeroAddress;
   }
 
   let fundsToAddInETH = document.getElementById(`create-button-funds-input`).value;
+  if (fundsToAddInETH && createTrustedThirdPartyInput == zeroAddress) {
+    displayAlertMessage("You can only add funds if a trusted third party is set as well.");
+    return;
+  }
   if (!fundsToAddInETH) {
     fundsToAddInETH = '0';
   }
+
+
   const fundsToAddInWei = web3.utils.toWei(fundsToAddInETH, 'ether')
 
   await window.WarrantCanary.methods.createWarrantCanary(
