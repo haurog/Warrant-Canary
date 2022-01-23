@@ -25,7 +25,7 @@ contract WarrantCanary is Ownable, Pausable {
     mapping(address => uint[]) public IDsTrusted;  // Store all warrant canaries that have this address as a trusted third party.
 
     event LogCreated(uint warrantCanaryID, string purpose,address trustedThirdParty);
-    event LogExpirationUpdated(uint warrantCanaryID, uint oldExpirationBlock, uint newExpirationBlock);
+    event LogExpirationUpdated(uint warrantCanaryID, uint oldExpirationTime, uint newExpirationTime);
     event LogFundsAdded(uint warrantCanaryID, uint amount);
     event LogChangedTrustedThirdParty(uint warrantCanaryID, address oldTrustedThirdParty, address newTrustedThirdParty);
     event LogFundsWithdrawn(uint warrantCanaryID, uint amount);
