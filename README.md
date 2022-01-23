@@ -2,7 +2,7 @@
 
 # Final Project: A Warrant Canary with Enclosed Funds
 
-This project is a [warrant canary contract](https://en.wikipedia.org/wiki/Warrant_canary), which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet. In this configuration the contract acts like a [dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch).
+This project is a [warrant canary contract](https://en.wikipedia.org/wiki/Warrant_canary), which allows users of the contract to passively inform a broad audience that a certain event has happened by not updating the a timestamp in the contract. Additionally, a user can enclose funds in the contract which can be moved by a predefined third party to their own wallet after expiration of the warrant canary. In this configuration the contract acts like a [dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch).
 
 A **user** can do several different interactions:
 
