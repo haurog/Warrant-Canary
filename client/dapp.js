@@ -130,12 +130,12 @@ async function createWarrantCanary() {
   }
 
   let fundsToAddInETH = document.getElementById(`create-button-funds-input`).value;
-  if (fundsToAddInETH && createTrustedThirdPartyInput == zeroAddress) {
-    displayAlertMessage("You can only add funds if a trusted third party is set as well.");
-    return;
-  }
   if (!fundsToAddInETH) {
     fundsToAddInETH = '0';
+  }
+  if (fundsToAddInETH != '0' && createTrustedThirdPartyInput == zeroAddress) {
+    displayAlertMessage("You can only add funds if a trusted third party is set as well.");
+    return;
   }
 
 
