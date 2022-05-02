@@ -119,7 +119,7 @@ contract("WarrantCanary", function (accounts) {
       "Only owner should be able to pause the contract."
     );
 
-    instance.pauseContract();
+    await instance.pauseContract();
 
     await truffleAssert.reverts(
       instance.createWarrantCanary(expirationTime, purpose, zeroAddress),
@@ -144,7 +144,7 @@ contract("WarrantCanary", function (accounts) {
       "Only owner should be able unpause the contract."
     );
 
-    instance.unpauseContract();
+    await instance.unpauseContract();
 
     await truffleAssert.passes(
       instance.addFunds(0, { value: fundsAdded }),
