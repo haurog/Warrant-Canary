@@ -126,7 +126,7 @@ contract WarrantCanary is Ownable, Pausable {
         emit LogFundsAdded(warrantCanaryID_, msg.value);
     }
 
-    /// @notice Change the address of the trusted third party. The 0x0 address is ownly allowed if no funds are enclosed.
+    /// @notice Change the address of the trusted third party. The 0x0 address is only allowed if no funds are enclosed.
     /// @param warrantCanaryID_: ID (uint) of the warrant canary whose trusted third party should be changed.
     function changeTrustedThirdParty(
         uint warrantCanaryID_,
