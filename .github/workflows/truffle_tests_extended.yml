@@ -27,7 +27,7 @@ jobs:
     #   run: echo "${{ secrets.DOT_ENV }}" > .env
 
     - name: Install Truffle and ganache
-      run: npm install truffle ganache-cli -g
+      run: npm install truffle@5.5.12 ganache-cli@7.1.0 -g
 
     - name: Install Truffle Dependencies
       run: npm install
