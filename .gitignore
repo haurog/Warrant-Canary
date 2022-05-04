@@ -1,6 +1,7 @@
 .vscode/settings.json
 .env
 build/
+bin/
 node_modules/
 coverage/
 coverage.json
