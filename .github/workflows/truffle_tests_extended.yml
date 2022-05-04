@@ -40,8 +40,8 @@ jobs:
     # - name: Run Codechecks
     #   run: npx codechecks
 
-    - name: Run Test Coverage
-      run: truffle run coverage
+    # - name: Run Test Coverage
+    #   run: truffle run coverage
 
     # - name: Generate .coveralls.yml file
     #   run: echo "${{ secrets.DOT_COVERALLS_YML }}" > .coveralls.yml
