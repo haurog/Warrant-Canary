@@ -10,20 +10,34 @@ require("@nomiclabs/hardhat-truffle5");
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.17",
-  networks: {
-    sepolia: {
-      url: "https://ethereum-sepolia.publicnode.com",
-      accounts: {
-        mnemonic: process.env.MNEMONIC,
-        path: "m/44'/60'/0'/0",
-        initialIndex: 0,
-        count: 20,
-        passphrase: "",
+    solidity: "0.8.17",
+    networks: {
+        sepolia: {
+            url: "https://ethereum-sepolia.publicnode.com",
+        },
+        scrollSepolia: {
+            url: "https://scroll-public.scroll-testnet.quiknode.pro",
+        },
+        scrollMainnet: {
+            url: "https://scroll-mainnet.chainstacklabs.com/",
+        },
+    },
+    etherscan: {
+        apiKey: {
+          scrollSepolia: 'abc',
+        },
+        customChains: [
+          {
+            network: 'scrollSepolia',
+            chainId: 534351,
+            urls: {
+              apiURL: 'https://sepolia-blockscout.scroll.io/api',
+              browserURL: 'https://sepolia-blockscout.scroll.io/',
+            },
+          },
+        ],
       },
-    }
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
-  },
+    // etherscan: {
+    //     apiKey: process.env.ETHERSCAN_API_KEY
+    // },
 };
