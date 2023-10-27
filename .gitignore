@@ -8,3 +8,4 @@ coverage.json
 gasReporterOutput.json
 artifacts/
 cache/
+Flattened.sol

@@ -58,30 +58,38 @@ https://user-images.githubusercontent.com/36535774/143702192-58e3da3f-898c-4b6f-
 
 ### Run Tests Locally
 
+This repository has been migrated from truffle to hardhat on the October 27th 2023. This means that the directory structure, tests and deployment are in a bit of a mixed state of truffle and hardhat style.
+
 * Install NodeJS
-* Install truffle
-* Install and run ganache-cli or ganache
+* Install hardhat
 * Run `npm install` in project root to install dependencies.
-* Run ganache on port: `8545`
-* Run truffle `truffle test`
-* Code coverage can be tested with `truffle run coverage`
+* Run `npx hardhat test`
 
 ### Deployment
+This repository uses frame.sh to connect to a hardware wallet to do the deployment. The chain to deploy needs to be also selected in the header of the deploy script: scripts/deploy.js
 
-To rinkeby:
+To scroll sepolia testnet:
 ```
-truffle migrate --reset --network rinkeby
+npx hardhat run --network scrollSepolia scripts/deploy.js --verbose
+```
+To scroll mainnet:
+```
+npx hardhat run --network scrollMainnet scripts/deploy.js --verbose
 ```
 
 Verify:
+Verification is done by hand. First flatten the contract by running
 ```
-truffle run verify WarrantCanary --network rinkeby
+npx hardhat flatten > Flattened.sol
 ```
+Then go to the scroll explorer and the contract address and verify manually:
+Example scroll Sepolia testnet: https://sepolia.scrollscan.com/address/0xdefd37cfe93f8b50ec4332bdacdaf4eadfc78be3
+Example Scroll Mainnet: https://scrollscan.com/address/0xdefd37cfe93f8b50ec4332bdacdaf4eadfc78be3
 
 ### Possible Improvements and Known Issues
 
 * In general event handling does not seem to be too reliable, sometimes it is missing updates.
 * Switching the account in Metamask is not handled on the website. Needs to be reloaded manually.
 * If ERC-20 tokens are accidentally sent to the contract they cannot be retrieved.
-* To make this contractand frontend more useable, a badge like element, like netlify badge at the top of this readme, will need to be developed such that anyone can add such a badge to their website to publicly show the status of their warrant canary.
+* To make this contract and frontend more useable, a badge like element, like netlify badge at the top of this readme, will need to be developed such that anyone can add such a badge to their website to publicly show the status of their warrant canary.
 

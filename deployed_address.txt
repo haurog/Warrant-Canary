@@ -1,2 +1,8 @@
 Network: Rinkeby
 Address: 0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849
+
+Network: Scroll Sepolia Testnet
+Address: 0xDEfd37cFE93F8b50Ec4332BdacdaF4eAdfc78be3
+
+Network: Scroll Sepolia Mainnet
+Address: 0xDEfd37cFE93F8b50Ec4332BdacdaF4eAdfc78be3
