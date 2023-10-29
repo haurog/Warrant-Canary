@@ -1,6 +1,7 @@
 var web3 = new Web3(window.ethereum);
-// contract address on Rinkeby:
-const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849'
+// contract address on Scroll mainnet:
+const wcAddress = '0xDEfd37cFE93F8b50Ec4332BdacdaF4eAdfc78be3'
+// const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849'  // Old address on rinkeby
 // const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1' // old contract address
 let userAddress;
 let WarrantCanary;
@@ -39,11 +40,12 @@ async function createContractObject() {
 
 async function checkNetworkInMetamask() {
   let chainID = await ethereum.request({method: 'eth_chainId'});
-  if (chainID != '0x4'){
-    window.alert("This dapp only runs on rinkeby test network. Please approve the switch to the correct network");
+  let targetChainID = '0x8274f'  // Scroll
+  if (chainID != targetChainID){
+    window.alert("This dapp only runs on scroll network. Please approve the switch to the correct network");
   }
   await ethereum.request({method: 'wallet_switchEthereumChain',
-                          params:[{chainId: '0x4'}]
+                          params:[{chainId: targetChainID}]
                         });
 }
 
@@ -141,61 +143,121 @@ async function createWarrantCanary() {
 
   const fundsToAddInWei = web3.utils.toWei(fundsToAddInETH, 'ether')
 
+  let gasAmount = await window.WarrantCanary.methods.createWarrantCanary(
+    createExpirationInput,
+    createPurposeInput,
+    createTrustedThirdPartyInput
+    ).estimateGas({ from: ethereum.selectedAddress, value: fundsToAddInWei});
+  console.log("Gas amount create new: ", gasAmount)
+  let data = window.WarrantCanary.methods.createWarrantCanary(
+    createExpirationInput,
+    createPurposeInput,
+    createTrustedThirdPartyInput
+    ).encodeABI();
+  console.log("data create: ", data)
   await window.WarrantCanary.methods.createWarrantCanary(
     createExpirationInput,
     createPurposeInput,
     createTrustedThirdPartyInput
-    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei});
+    ).send({from: ethereum.selectedAddress,
+      value: fundsToAddInWei,
+      type: 1,
+      data: data,
+      });
 }
 
 async function updateExpiration(ID) {
   const newExpirationTime = document.getElementById(`update-expiration-input-${ID}`).value;
+  let gasAmount = await window.WarrantCanary.methods.updateExpiration(ID, newExpirationTime).estimateGas({ from: ethereum.selectedAddress});
+  console.log("Gas amount update expiration: ", gasAmount)
+  let data = window.WarrantCanary.methods.updateExpiration(ID, newExpirationTime).encodeABI();
+  console.log("data update expiration: ", data)
+
   await window.WarrantCanary.methods.updateExpiration(
     ID,
     newExpirationTime
-    ).send({from: ethereum.selectedAddress});
+    ).send({from: ethereum.selectedAddress,
+      type: 1,
+      data: data,
+      });
 }
 
 async function addFunds(ID) {
   const fundsToAddInETH = document.getElementById(`add-funds-input-${ID}`).value;
   const fundsToAddInWei = web3.utils.toWei(fundsToAddInETH, 'ether');
+  let gasAmount = await window.WarrantCanary.methods.addFunds(ID).estimateGas({ from: ethereum.selectedAddress});
+  console.log("Gas amount add funds: ", gasAmount)
+  let data = window.WarrantCanary.methods.addFunds(ID).encodeABI();
+  console.log("data add funds: ", data)
   await window.WarrantCanary.methods.addFunds(
     ID
-    ).send({from: ethereum.selectedAddress, value: fundsToAddInWei});
+    ).send({from: ethereum.selectedAddress,
+      value: fundsToAddInWei,
+      type: 1,
+      data: data,
+      });
 }
 
 async function changeTrustedThirdParty(ID) {
   const newTrustedThirdParty = document.getElementById(`change-trusted-third-party-input-${ID}`).value;
+  let gasAmount = await window.WarrantCanary.methods.changeTrustedThirdParty(ID, newTrustedThirdParty).estimateGas({ from: ethereum.selectedAddress});
+  console.log("Gas amount change third party: ", gasAmount)
+  let data = window.WarrantCanary.methods.changeTrustedThirdParty(ID, newTrustedThirdParty).encodeABI();
+  console.log("data change third party: ", data)
   await window.WarrantCanary.methods.changeTrustedThirdParty(
     ID,
     newTrustedThirdParty
-    ).send({from: ethereum.selectedAddress});
+    ).send({from: ethereum.selectedAddress,
+      type: 1,
+      data: data,
+      });
 }
 
 async function withdrawSomeFunds(ID) {
   if (await checkIfUserCanInteract(ID)) {
     const fundsToWithdrawInETH = document.getElementById(`withdrawSome-button-funds-input-${ID}`).value;
     const fundsToWithdrawInWei = web3.utils.toWei(fundsToWithdrawInETH, 'ether');
+    let gasAmount = await window.WarrantCanary.methods.withdrawSomeFunds(ID, fundsToWithdrawInWei).estimateGas({ from: ethereum.selectedAddress});
+    console.log("Gas amount withdraw some: ", gasAmount)
+    let data = window.WarrantCanary.methods.withdrawSomeFunds(ID, fundsToWithdrawInWei).encodeABI();
+    console.log("data withdraw some: ", data)
     await window.WarrantCanary.methods.withdrawSomeFunds(
       ID,
       fundsToWithdrawInWei
-      ).send({from: ethereum.selectedAddress});
+      ).send({from: ethereum.selectedAddress,
+        type: 1,
+        data: data,
+        });
   }
 }
 
 async function withdrawAllFunds(ID) {
   if (await checkIfUserCanInteract(ID)) {
+    let gasAmount = await window.WarrantCanary.methods.withdrawAllFunds(ID).estimateGas({ from: ethereum.selectedAddress});
+    console.log("Gas amount withdraw all: ", gasAmount)
+    let data = window.WarrantCanary.methods.withdrawAllFunds(ID).encodeABI();
+    console.log("data withdraw all: ", data)
     await window.WarrantCanary.methods.withdrawAllFunds(
       ID
-      ).send({from: ethereum.selectedAddress});
+      ).send({from: ethereum.selectedAddress,
+        type: 1,
+        data: data,
+        });
   }
 }
 
 async function deleteWarrantCanary(ID) {
   if (await checkIfCanDelete(ID) && await checkIfUserCanInteract(ID)) {
+    let gasAmount = await window.WarrantCanary.methods.deleteWarrantCanary(ID).estimateGas({ from: ethereum.selectedAddress});
+    console.log("Gas amount delete: ", gasAmount)
+    let data = window.WarrantCanary.methods.deleteWarrantCanary(ID).encodeABI();
+    console.log("data delete: ", data)
     await window.WarrantCanary.methods.deleteWarrantCanary(
       ID
-    ).send({ from: ethereum.selectedAddress });
+      ).send({from: ethereum.selectedAddress,
+        type: 1,
+        data: data,
+        });
   }
 }
 
@@ -220,7 +282,7 @@ async function displayAWarrantCanary(ID) {
   if (stateOfWC.warrantCanaryOwner.toLowerCase() == window.userAddress) {interactionRights = "Owner"};
   if (stateOfWC.trustedThirdParty.toLowerCase() == window.userAddress) {interactionRights = "Trusted"};
   const displayLocation = document.getElementById(`warrant-canary-${ID}`);
-  let DateTime = new Date(stateOfWC.expirationTime * 1000);
+  let DateTime = new Date(Number(stateOfWC.expirationTime) * 1000);
   let funds = web3.utils.fromWei(stateOfWC.enclosedFunds, 'ether');
 
   const deleted = checkIfDeleted(stateOfWC);
@@ -232,7 +294,7 @@ async function displayAWarrantCanary(ID) {
       expiryMessage = `<label class="expired">Expired</label>`;
     } else {
       expiryMessage = "now";
-      expiryInSeconds = stateOfWC.expirationTime - timeNow;
+      expiryInSeconds = Number(stateOfWC.expirationTime) - timeNow;
       if (Math.floor(expiryInSeconds/(24*3600)) > 0) {
         expiryMessage = `in ${Math.floor(expiryInSeconds/(24*3600))} days`;
       } else if ((Math.floor(expiryInSeconds/(3600)) > 0)){
@@ -252,7 +314,7 @@ async function displayAWarrantCanary(ID) {
       <div class="purpose"> ${stateOfWC.purpose} </div>
       <div class="important_info"> Expiration: ${DateTime.toLocaleString()} (${stateOfWC.expirationTime})</div>
       <div class="important_info"> Funds: ${funds} ETH</div>
-      <div> Updated: <a href=https://rinkeby.etherscan.io/block/${stateOfWC.lastUpdatedInBlock} target="_blank" > ${stateOfWC.lastUpdatedInBlock} </a></div>
+      <div> Updated: <a href=https://scrollscan.io/block/${stateOfWC.lastUpdatedInBlock} target="_blank" > ${stateOfWC.lastUpdatedInBlock} </a></div>
       <div> Owner: ${stateOfWC.warrantCanaryOwner} </div>
       <div> Third party: ${stateOfWC.trustedThirdParty}</div>
       `);
