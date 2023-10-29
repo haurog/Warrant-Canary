@@ -2,7 +2,6 @@ var web3 = new Web3(window.ethereum);
 // contract address on Scroll mainnet:
 const wcAddress = '0xDEfd37cFE93F8b50Ec4332BdacdaF4eAdfc78be3'
 // const wcAddress = '0x51f217fEFC94CBD21C9f36E120C07D5Ba6205849'  // Old address on rinkeby
-// const wcAddress = '0xF06c47b7FeB65aF49dDD78c1816BD4f31c2d56F1' // old contract address
 let userAddress;
 let WarrantCanary;
 
@@ -40,7 +39,8 @@ async function createContractObject() {
 
 async function checkNetworkInMetamask() {
   let chainID = await ethereum.request({method: 'eth_chainId'});
-  let targetChainID = '0x8274f'  // Scroll
+  // let targetChainID = '0x82750'  // Scroll Mainnet
+  let targetChainID = '0x8274f'  // Scroll Sepolia Testnet
   if (chainID != targetChainID){
     window.alert("This dapp only runs on scroll network. Please approve the switch to the correct network");
   }
