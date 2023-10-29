@@ -39,8 +39,8 @@ async function createContractObject() {
 
 async function checkNetworkInMetamask() {
   let chainID = await ethereum.request({method: 'eth_chainId'});
-  // let targetChainID = '0x82750'  // Scroll Mainnet
-  let targetChainID = '0x8274f'  // Scroll Sepolia Testnet
+  let targetChainID = '0x82750'  // Scroll Mainnet
+  // let targetChainID = '0x8274f'  // Scroll Sepolia Testnet
   if (chainID != targetChainID){
     window.alert("This dapp only runs on scroll network. Please approve the switch to the correct network");
   }
