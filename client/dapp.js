@@ -386,8 +386,8 @@ async function getAllWarrantCanaries() {
 async function getAllAssociatedWarrantCanaries() {
   let IDsOwned = await window.WarrantCanary.methods.getIDsOwned(window.userAddress).call();
   let IDsTrusted = await window.WarrantCanary.methods.getIDsTrusted(window.userAddress).call();
-  IDsOwned = [...IDsOwned]; // clone array to make it writable
-  IDsTrusted = [...IDsTrusted]; // clone array to make it writable
+  IDsOwned = [Number(...IDsOwned)]; // clone and convert array to make it writable
+  IDsTrusted = [Number(...IDsTrusted)]; // clone and convert array to make it writable
   IDsOwned.sort(function(a, b) {return a - b;});
   IDsTrusted.sort(function(a, b) {return a - b;});
 
